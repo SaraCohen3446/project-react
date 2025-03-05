@@ -32,6 +32,15 @@ const OrderSlice = createSlice({
       state.sum = state.arr.reduce((total, item) => total + (item.price * item.qty), 0);
       saveCartToLocalStorage(state);
     },
+    /**
+     * איפוס בלוקל סטורג'
+     * @param {*} state 
+     */
+    resetCart: (state) => {
+      state.arr = [];
+      state.count = 0;
+      state.sum = 0;
+    },
     // פונקציה להסרת פריט מהעגלה לחלוטין
     removeItem: (state, action) => {
       const index = state.arr.findIndex(item => item._id === action.payload._id);
@@ -56,5 +65,5 @@ const OrderSlice = createSlice({
   }
 });
 
-export const { removeItem, reduce, addItem } = OrderSlice.actions;
+export const { resetCart, removeItem, reduce, addItem } = OrderSlice.actions;
 export default OrderSlice.reducer;

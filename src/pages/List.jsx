@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import OneProduct from "../component/OneProduct";
 import { getAllProducts, totalPages } from "../api/ProductApi";
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
 
 const List = () => {
     const [arr, setArr] = useState([]); // ניהול המוצרים במצב מקומי
@@ -78,10 +81,10 @@ const List = () => {
                     ))}
                 </ul>
             )}
-            <button onClick={() => { if (currentPage > 1) setCurrentPage(currentPage - 1) }}>⏮️</button>
+            <button onClick={() => { if (currentPage > 1) setCurrentPage(currentPage - 1) }}><ChevronLeftIcon /></button>
             <button>{currentPage}</button>
-            <button onClick={() => { if (currentPage < totalPage) setCurrentPage(currentPage + 1) }}>⏭️</button>
-            {/* <button>{totalPage}</button> */}
+
+            <button onClick={() => { if (currentPage < totalPage) setCurrentPage(currentPage + 1) }}><ChevronRightIcon /></button>
 
             <Outlet />
         </>

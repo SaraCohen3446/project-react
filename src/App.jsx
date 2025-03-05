@@ -20,7 +20,7 @@ function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path="/AddProduct" element={<FormProduct />} />
+        <Route path="/FormProduct" element={<FormProduct />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/login" element={<LogIn />} />
         <Route path="/signin" element={<SignUp />} />
