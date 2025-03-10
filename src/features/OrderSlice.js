@@ -34,7 +34,7 @@ const OrderSlice = createSlice({
     },
     /**
      * איפוס בלוקל סטורג'
-     * @param {*} state 
+     *
      */
     resetCart: (state) => {
       state.arr = [];

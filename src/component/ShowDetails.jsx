@@ -1,57 +1,96 @@
-import { Button, Modal, Typography } from "@mui/material";
+import { Button, Modal, Typography, Box, CardMedia } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getById } from "../api/ProductApi";
+import forShowDetiles from '../assets/forShowDetiles.png';
 
-
-export const ShowDetalis = () => {
-
+export const ShowDetails = () => {
     let { id } = useParams();
-    let navigate = useNavigate()
+    let navigate = useNavigate();
     const [item, setItem] = useState({});
-
     const [modalOpen, setModalOpen] = useState(true);
 
     async function fetchProductById(id) {
         try {
-            let res = await getById(id)
-            setItem(res.data)
+            let res = await getById(id);
+            setItem(res.data);
             console.log(res.data);
-
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err);
-
         }
     }
 
     useEffect(() => {
-        fetchProductById(id)
-    }, [id])
-
+        fetchProductById(id);
+    }, [id]);
 
     const handleClose = () => {
-        setModalOpen(false);  // close the modal when the close button is clicked
-        navigate(-1)
+        setModalOpen(false);
+        navigate(-1);
     };
 
-    return <>
-        {/* מודל להצגת פרטי המוצר */}
+    return (
         <Modal open={modalOpen} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
-            <div style={{ width: '100%', backgroundColor: 'white' }}>
-                <Button onClick={handleClose} style={{ position: 'absolute', top: '10px', right: '10px' }}>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'white',
+                padding: '20px',
+                outline: 'none',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                boxShadow: 3,
+                borderRadius: '8px',
+                width: '600px',
+                minHeight: '500px', // מוסיף גובה כדי שהמסגרת תיראה גם למעלה ולמטה
+                border: '10px solid #00174F', // מסגרת מכל הכיוונים
+                boxSizing: 'border-box', // מוודא שהמסגרת נספרת כחלק מהגודל
+                position: 'relative'
+            }}>
+                {/* לוגו על כל הרוחב */}
+                <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
+                    <img src={forShowDetiles} alt="Cart Logo" style={{ width: '100%' }} />
+                </Box>
+
+                {/* כפתור סגירה בצבע #00174F */}
+                <Button onClick={handleClose} sx={{ position: 'absolute', top: '10px', right: '10px', color: '#00174F' }}>
                     <CloseIcon />
                 </Button>
-                <h2 id="modal-title">{item?.name}</h2>
-                <img src={`../src/assets/${item?.img}`} alt={item?.name} />
-                <p id="modal-description">{item?.description}</p>
-                <Typography variant="body1">{item?.ingredient}</Typography>
-                <Typography variant="body1">{item?.category}</Typography>
-                <Typography variant="body1">{item?.date}</Typography>
-                <Typography variant="body2">{item?.additionalDetails}</Typography>
-                <Button onClick={handleClose}>close</Button>
-            </div>
+
+                {/* תמונת המוצר */}
+                <CardMedia
+                    component="img"
+                    height="300"
+                    image={`../src/assets/${item.img}`}
+                    alt={item.name}
+                    sx={{ width: '100%', objectFit: 'cover', borderRadius: '8px' }}
+                />
+
+                {/* פרטי המוצר */}
+                <Box sx={{ width: '100%', mt: 2, textAlign: 'center' }}>
+                    <Typography variant="h5" component="div" gutterBottom>
+                        {item.name}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary" paragraph>
+                        {item.description}
+                    </Typography>
+                    <Typography variant="h6"> ${item.price}</Typography>
+                    <Typography variant="h7">{item.category}</Typography>
+                    <Typography variant="h8">{item.date}</Typography>
+                    <Typography variant="h6" color="text.secondary">{item.additionalDetails}</Typography>
+                </Box>
+
+                <Button variant="contained" color="primary" onClick={handleClose} sx={{ mt: 2, backgroundColor: '#00174F' }}>
+                    Close
+                </Button>
+            </Box>
         </Modal>
-    </>
-}
+    );
+};
+
+export default ShowDetails;

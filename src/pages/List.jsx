@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import OneProduct from "../component/OneProduct";
 import { getAllProducts, totalPages } from "../api/ProductApi";
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { Pagination, Stack } from "@mui/material";
+
+
+// import CustomFilterMenu from "../component/CustomFilterMenu";
+
 
 
 const List = () => {
@@ -63,7 +66,9 @@ const List = () => {
 
     return (
         <>
-            <button onClick={handleCartClick}>Shopping cart</button>
+
+        {/* <CustomFilterMenu /> */}
+
 
             {loading ? ( // הצגת הודעה אם בטעינה
                 <h1>Loading...</h1>
@@ -72,20 +77,46 @@ const List = () => {
             ) : arr.length === 0 ? ( // הצגת הודעה אם אין מוצרים
                 <h1>No Product Found</h1>
             ) : (
-                <ul>
+               
+                <ul style={{ display: 'flex', flexWrap: 'wrap', listStyleType: 'none', padding: 0 }}>
                     {arr.map(item => (
-                        <li key={item._id}>
-                            <Link to={`details/${item._id}`}><OneProduct item={item} onDelete={deleteProductFromArr} /></Link>
-
+                        <li key={item._id} style={{ margin: '10px', flex: '1 0 auto', maxWidth: '30%' }}>
+                            <Link to={`details/${item._id}`} style={{ textDecoration: 'none' }}>
+                                <OneProduct item={item} onDelete={deleteProductFromArr} style={{ width: '100%', height: 'auto' }} />
+                            </Link>
                         </li>
                     ))}
                 </ul>
             )}
-            <button onClick={() => { if (currentPage > 1) setCurrentPage(currentPage - 1) }}><ChevronLeftIcon /></button>
-            <button>{currentPage}</button>
-
-            <button onClick={() => { if (currentPage < totalPage) setCurrentPage(currentPage + 1) }}><ChevronRightIcon /></button>
-
+           <Stack spacing={2} alignItems="center" sx={{ mt: 3 }}>
+                <Pagination
+                    count={totalPage}
+                    page={currentPage}
+                    onChange={(event, value) => setCurrentPage(value)}
+                    color="primary"
+                    size="large"
+                    shape="rounded"
+                    siblingCount={1}
+                    boundaryCount={1}
+                    sx={{
+                        '.MuiPaginationItem-root': {
+                            backgroundColor: '#00174F',
+                            color: '#fff',
+                            borderRadius: '50%',
+                            '&:hover': {
+                                backgroundColor: '#D81633',
+                            },
+                        },
+                        '.Mui-selected': {
+                            backgroundColor: '#D81633', // צבע הבחירה
+                            color: '#fff',
+                        },
+                        '.MuiPaginationItem-ellipsis': {
+                            color: '#00174F',
+                        },
+                    }}
+                />
+            </Stack>
             <Outlet />
         </>
     );

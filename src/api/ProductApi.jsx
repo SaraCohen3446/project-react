@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const baseUrl = "http://localhost:4000/api/product";
 
-export const getAllProducts = (pageNum,limit) => {
+export const getAllProducts = (pageNum, limit) => {
     return axios.get(`${baseUrl}/?page=${pageNum}&limit=${limit}`);
 };
 
