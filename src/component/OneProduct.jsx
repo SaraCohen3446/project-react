@@ -18,6 +18,7 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
     const [isFavorited, setIsFavorited] = useState(false);
     const navigate = useNavigate();
 
+
     const handleAddToCart = (event) => {
         event.preventDefault();
         dispatch(addItem({ _id: item._id, name: item.name, price: item.price, quantity: 1 }));
@@ -35,7 +36,7 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
     const removeProduct = async (event) => {
         event.stopPropagation();
         try {
-            let res = await deleteById(item._id);
+            let res = await deleteById(item._id,currentUser?.token);
             console.log(res.data);
             onDelete(item._id);
         } catch (err) {
@@ -83,7 +84,7 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
                     }}>
                         {currentUser?.role === "MANAGER" && (
                             <IconButton onClick={(e) => { e.preventDefault(); removeProduct(e); }} sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f8f8f8' } }}>
-                                <DeleteIcon sx={{ color: "#D81633" }} />
+                                <DeleteIcon sx={{ color: "#00174F" }} />
                             </IconButton>
                         )}
                         {currentUser?.role === "MANAGER" && (

@@ -89,7 +89,7 @@ const List = () => {
                 </ul>
             )}
            <Stack spacing={2} alignItems="center" sx={{ mt: 3 }}>
-                <Pagination
+                <Pagination          
                     count={totalPage}
                     page={currentPage}
                     onChange={(event, value) => setCurrentPage(value)}

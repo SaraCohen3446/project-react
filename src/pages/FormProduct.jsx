@@ -4,12 +4,15 @@ import { addProduct, update } from "../api/ProductApi";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { TextField, Button, Box, Typography, Container } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const FormProduct = () => {
     const location = useLocation();
     const item = location.state;
     const { register, handleSubmit, reset } = useForm();
     const [imagePreview, setImagePreview] = useState(item ? item.img : "");
+    const currentUser = useSelector(state => state.user.user);
+
 
     // פונקציה לשמירת המוצר
     const save = async (data) => {
@@ -21,10 +24,10 @@ const FormProduct = () => {
 
             let res;
             if (!item) {
-                res = await addProduct(data);
+                res = await addProduct(data,currentUser?.token);
                 alert("Add sucssfuly");
             } else {
-                res = await update(item._id, data);
+                res = await update(item._id, data,currentUser?.token);
                 alert("Edit sucssfuly");
             }
 

@@ -14,14 +14,22 @@ export const getById = (id) => {
     return axios.get(`${baseUrl}/${id}`);
 };
 
-export const deleteById = (id) => {
-    return axios.delete(`${baseUrl}/${id}`);
+export const deleteById = (id, token) => {
+    return axios.delete(`${baseUrl}/${id}`, {
+        headers: { "authorization": token }
+    });
 };
 
-export const addProduct = (productData) => {
-    return axios.post(baseUrl, productData);
+export const addProduct = (productData, token) => {
+    return axios.post(baseUrl, productData, {
+        headers: { "authorization": token }
+    })
 };
 
-export const update = (id, updatedData) => {
-    return axios.put(`${baseUrl}/${id}`, updatedData);
+
+export const update = (id, updatedData, token) => {
+    return axios.put(`${baseUrl}/${id}`, updatedData,{
+        headers:{"authorization":token}
+
+    })
 };

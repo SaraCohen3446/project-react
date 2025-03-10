@@ -4,18 +4,24 @@ import { resetCart } from "./OrderSlice";  // Import את הפעולה לניק�
 
 export const loginUser = createAsyncThunk("user/login", async (userData, thunkAPI) => {
     try {
-        console.log(userData);
-        
-        return await loginUserApi(userData);
+        console.log(userData); // הדפסת נתוני הקלט
+        const response = await loginUserApi(userData);
+        console.log("Response from API:", response);  // הדפסת התשובה מה-API
+        return response.data;
     } catch (error) {
+        console.log(error.response.data);
         return thunkAPI.rejectWithValue(error.response.data);
     }
 });
 
 export const registerUser = createAsyncThunk("user/register", async (userData, thunkAPI) => {
     try {
-        return await registerUserApi(userData);
+        console.log(userData); // הדפסת נתוני הקלט
+        const response = await registerUserApi(userData);
+        console.log("Response from API:", response);  // הדפסת התשובה מה-API
+        return response.data;
     } catch (error) {
+        console.log(error.response.data);
         return thunkAPI.rejectWithValue(error.response.data);
     }
 });
@@ -33,16 +39,16 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(loginUser.pending, (state) => { state.loading = true; })
-            .addCase(loginUser.fulfilled, (state, action) => { 
-                state.loading = false; 
-                state.user = action.payload; 
+            .addCase(loginUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload;
                 localStorage.setItem("user", JSON.stringify(action.payload)); // Save user to localStorage
             })
             .addCase(loginUser.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
             .addCase(registerUser.pending, (state) => { state.loading = true; })
-            .addCase(registerUser.fulfilled, (state, action) => { 
-                state.loading = false; 
-                state.user = action.payload; 
+            .addCase(registerUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload;
                 localStorage.setItem("user", JSON.stringify(action.payload)); // Save user to localStorage
                 localStorage.removeItem('cart');  // Remove cart from localStorage
 

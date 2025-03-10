@@ -1,16 +1,23 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, reduce, addItem } from '../features/OrderSlice.js';
 import { Container, Typography, IconButton, Box, Paper, Divider, Grid } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import OrderForm from './OrderFrom.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
     const cart = useSelector((state) => state.cart.arr || []);
     const totalPrice = useSelector((state) => state.cart.sum);
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
+    const [isOrderFormOpen, setOrderFormOpen] = useState(false);
+    // פותח את הטופס להזמנה
+    const handleOpenOrderForm = () => {
+        setOrderFormOpen(true);
+    };
     const handleRemove = (id) => {
         dispatch(removeItem({ _id: id }));
     };
@@ -22,10 +29,14 @@ const Cart = () => {
     const handleAdd = (item) => {
         dispatch(addItem(item));
     };
+    // סוגר את הטופס להזמנה
+    const handleCloseOrderForm = () => {
+        setOrderFormOpen(false);
+    };
 
     return (
-        <Container maxWidth={false} sx={{ top: "0px", height: "600px" ,}}>
-            <Typography variant="h4" gutterBottom sx={{ color: '#00174F', textAlign: 'center', fontWeight: 'bold'}}>
+        <Container maxWidth={false} sx={{ top: "0px", height: "600px", }}>
+            <Typography variant="h4" gutterBottom sx={{ color: '#00174F', textAlign: 'center', fontWeight: 'bold' }}>
                 Shopping Cart
             </Typography>
             {cart.length === 0 ? (
@@ -98,7 +109,13 @@ const Cart = () => {
             <Typography variant="h5" sx={{ textAlign: 'center', color: '#00174F', fontWeight: 'bold' }}>
                 Total Price: ${totalPrice.toFixed(2)}
             </Typography>
+            <div>
+                <button onClick={handleOpenOrderForm}>סיים הזמנה</button>
+                <OrderForm open={isOrderFormOpen} handleClose={handleCloseOrderForm} />
+            </div>
         </Container>
+
+
     );
 };
 
