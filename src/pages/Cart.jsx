@@ -115,9 +115,12 @@ const Cart = () => {
             </Typography>
 
             <div>
-                ({cart}&&{<Button onClick={handleCheckForOrder} sx={{ backgroundColor: '#00174F', color: 'white', padding: '10px 20px', borderRadius: '4px' }}>
-                    Finish Order
-                </Button>})
+                {cart.length > 0 && (
+                    <Button onClick={handleCheckForOrder} sx={{ backgroundColor: '#00174F', color: 'white', padding: '10px 20px', borderRadius: '4px' }}>
+                        Finish Order
+                    </Button>
+                )}
+
             </div>
 
             {/* Modal for CheckForOrder */}
