@@ -6,6 +6,9 @@ import { addOrder } from '../api/OrderApi';
 import { useForm } from 'react-hook-form';
 import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { useNavigate } from 'react-router-dom';
+import { resetCart } from '../features/OrderSlice';
+
 
 
 const schema = Joi.object({
@@ -34,24 +37,32 @@ const schema = Joi.object({
     }),
 });
 
-const OrderForm = ({ open, handleClose }) => {
+const OrderForm = ( ) => {
+
+
 
     let currentUser = useSelector(st => st.user.user);
     let products = useSelector(st => st.cart.arr);
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: joiResolver(schema),
     });
 
+    function handleClose(){
+    navigate(-1)
+    }
+
     const onSubmit = async (data) => {
         try {
             console.log(data);
             data.products = products;
-            data.userId=currentUser._id;
+            data.userId = currentUser._id;
 
             let res = await addOrder(data, currentUser?.token); // שלח את ההזמנה
-            handleClose(); // סגור את הטופס
+            dispatch(resetCart());
+            navigate("/"); // סגור את הטופס
         }
         catch (err) {
             console.log(err);
@@ -61,7 +72,7 @@ const OrderForm = ({ open, handleClose }) => {
     };
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={true} onClose={handleClose}>
             <DialogTitle>סיום הזמנה</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit(onSubmit)}>

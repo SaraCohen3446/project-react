@@ -27,7 +27,7 @@ export const ShowDetails = () => {
 
     const handleClose = () => {
         setModalOpen(false);
-        navigate(-1);
+        navigate("/");
     };
 
     return (

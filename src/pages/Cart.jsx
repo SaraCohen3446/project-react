@@ -5,19 +5,21 @@ import { Container, Typography, IconButton, Box, Paper, Divider, Grid } from '@m
 import { Delete } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import OrderForm from './OrderFrom.jsx';
 import { useNavigate } from 'react-router-dom';
+import ChekForOrder from './ChekForOrder.jsx';
+import OrderForm from './OrderFrom.jsx';
+
 
 const Cart = () => {
     const cart = useSelector((state) => state.cart.arr || []);
     const totalPrice = useSelector((state) => state.cart.sum);
+    const currentUser = useSelector((st) => st.user.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [isOrderFormOpen, setOrderFormOpen] = useState(false);
-    // פותח את הטופס להזמנה
-    const handleOpenOrderForm = () => {
-        setOrderFormOpen(true);
-    };
+
+    const [isCheckForOrderOpen, setCheckForOrderOpen] = useState(false); // מצב לפתיחת CheckForOrder
+
+
     const handleRemove = (id) => {
         dispatch(removeItem({ _id: id }));
     };
@@ -29,9 +31,14 @@ const Cart = () => {
     const handleAdd = (item) => {
         dispatch(addItem(item));
     };
-    // סוגר את הטופס להזמנה
-    const handleCloseOrderForm = () => {
-        setOrderFormOpen(false);
+
+    // פונקציה שמבצעת את הפעולה כשאין currentUser
+    const handleCheckForOrder = () => {
+        if (!currentUser) {
+            setCheckForOrderOpen(true);
+        } else {
+            navigate("/orderForm")
+        }
     };
 
     return (
@@ -49,21 +56,19 @@ const Cart = () => {
                         key={item._id ? item._id : `${index}-${item.price}`}
                         elevation={4}
                         sx={{
-                            bgcolor: "#F7F2F3",
-                            height: '300px',
+                            height: '170px',
                             display: 'flex',
-                            border: '3px solid #00174F ',
-                            borderRadius: '8px',
-                            width: '1300px',
+                            border: '1px solid #00174F ',
+                            width: '700px',
                             marginBottom: '16px',
                             alignItems: 'center',
-                            padding: '10px',
+                            padding: '1px',
                         }}
                     >
                         <Grid container alignItems="center" spacing={0.2}>
                             <Grid item xs={3}>
                                 <Box sx={{ maxWidth: '100%' }}>
-                                    <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', borderRadius: '8px' }} />
+                                    <img src={`../src/assets/${item.img}`} alt={item.name} style={{ width: '100%', height: '100%', borderRadius: '8px' }} />
                                 </Box>
                             </Grid>
 
@@ -73,16 +78,16 @@ const Cart = () => {
                                 </Typography>
                             </Grid>
 
-                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', width: "20px" }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', border: '2px solid #00174F', borderRadius: '20px', width: '120px', justifyContent: 'space-between', padding: '5px' }}>
-                                    <IconButton onClick={() => handleReduce(item._id)} sx={{ color: '#00174F' }}>
-                                        <RemoveIcon />
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', width: "15px" }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid rgb(113, 115, 120)', borderRadius: '15px', width: '80px', justifyContent: 'space-between', padding: '2px' }}>
+                                    <IconButton onClick={() => handleReduce(item._id)} sx={{ color: '#00174F', padding: '2px' }}>
+                                        <RemoveIcon fontSize="small" />
                                     </IconButton>
-                                    <Typography sx={{ fontWeight: 'bold', color: '#00174F', marginX: '5px' }}>
+                                    <Typography sx={{ fontWeight: 'bold', color: '#00174F', fontSize: '0.8rem', marginX: '3px' }}>
                                         {item.qty}
                                     </Typography>
-                                    <IconButton onClick={() => handleAdd(item)} sx={{ color: '#00174F' }}>
-                                        <AddIcon />
+                                    <IconButton onClick={() => handleAdd(item)} sx={{ color: '#00174F', padding: '2px' }}>
+                                        <AddIcon fontSize="small" />
                                     </IconButton>
                                 </Box>
                             </Grid>
@@ -93,7 +98,6 @@ const Cart = () => {
                                 </IconButton>
                             </Grid>
 
-                            {/* המחיר ימוקם בצד ימין למטה */}
                             <Grid item xs={2.5} sx={{ textAlign: 'right', position: 'relative', paddingBottom: '10px' }}>
                                 <Box sx={{ position: 'absolute', bottom: '-10px', right: 0 }}>
                                     <Typography sx={{ fontWeight: 'bold', color: '#00174F', fontSize: '1.2rem' }}>
@@ -109,13 +113,12 @@ const Cart = () => {
             <Typography variant="h5" sx={{ textAlign: 'center', color: '#00174F', fontWeight: 'bold' }}>
                 Total Price: ${totalPrice.toFixed(2)}
             </Typography>
+
             <div>
-                <button onClick={handleOpenOrderForm}>סיים הזמנה</button>
-                <OrderForm open={isOrderFormOpen} handleClose={handleCloseOrderForm} />
+                <button onClick={handleCheckForOrder}>סיים הזמנה</button> {/* כפתור עם התנאי */}
+                {isCheckForOrderOpen && <ChekForOrder />}
             </div>
         </Container>
-
-
     );
 };
 

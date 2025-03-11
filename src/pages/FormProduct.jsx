@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { addProduct, update } from "../api/ProductApi";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { TextField, Button, Box, Typography, Container } from "@mui/material";
 import { useSelector } from "react-redux";
 
@@ -12,6 +12,9 @@ const FormProduct = () => {
     const { register, handleSubmit, reset } = useForm();
     const [imagePreview, setImagePreview] = useState(item ? item.img : "");
     const currentUser = useSelector(state => state.user.user);
+    const navigate = useNavigate();
+
+
 
 
     // פונקציה לשמירת המוצר
@@ -24,16 +27,18 @@ const FormProduct = () => {
 
             let res;
             if (!item) {
-                res = await addProduct(data,currentUser?.token);
+                res = await addProduct(data, currentUser?.token);
                 alert("Add sucssfuly");
             } else {
-                res = await update(item._id, data,currentUser?.token);
+                res = await update(item._id, data, currentUser?.token);
                 alert("Edit sucssfuly");
             }
 
             reset();
         } catch (err) {
             alert("Problem with add product\n" + err.message);
+            console.log(err);
+
         }
     };
 
@@ -64,20 +69,20 @@ const FormProduct = () => {
             name: item ? item.name : "",
             description: item ? item.description : "",
             price: item ? item.price : "",
-            date: item ? new Date(item.date).toISOString().split("T")[0] : "", 
+            date: item ? new Date(item.date).toISOString().split("T")[0] : "",
             img: item ? item.img : "",
             category: item ? item.category : "",
             ingredient: item ? item.ingredient : "",
         });
     }, [item, reset]);
-    
+
 
     return (
         <Container sx={{ maxWidth: "sm", paddingTop: 4, backgroundColor: "#F7F2F3", borderRadius: 2, display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column", border: "2px solid #00174F" }}>
             {/* כותרת בראש העמוד */}
             <Typography variant="h4" sx={{ color: "#00174F", marginBottom: 4, textAlign: "center" }}>
-                {"Add product"}
-                {/* {user ? "Edit product" : "Add product"} */}
+
+                {item ? "Edit product" : "Add product"}
 
             </Typography>
 
@@ -149,8 +154,22 @@ const FormProduct = () => {
                         borderColor: "#00174F",
                         '&:hover': { backgroundColor: "#D81633", borderColor: "#D81633" },
                     }} >
-                    {"Add product"}
-                    {/* {user ? "Edit product" : "Add product"} */}
+
+                    {item ? "Edit product" : "Add product"}
+                </Button>
+
+                <Button
+                    onClick={() => navigate(-1)}
+                    variant="outlined"
+                    fullWidth
+                    sx={{
+                        color: "#fff",
+                        backgroundColor: "#D81633",
+                        borderColor: "#D81633",
+                        mt: 2, // מרווח מעל הכפתור
+                        '&:hover': { backgroundColor: "#00174F", borderColor: "#00174F" },
+                    }} >
+                    Cancel
                 </Button>
             </form>
         </Container>

@@ -10,6 +10,8 @@ import LogIn from './pages/LogIn';
 import SignUp from './pages/SignUp';
 import FormProduct from './pages/FormProduct';
 import ShowDetalis from './component/ShowDetails';
+import CheckForOrder from './pages/ChekForOrder';
+import OrderForm from './pages/OrderFrom';
 
 function App() {
 
@@ -22,6 +24,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signin" element={<SignUp />} />
+          <Route path="/checkfororder" element={<CheckForOrder />} /> {/* עדכון לנתיב החדש */}
+          <Route path="/orderForm" element={<OrderForm/>}/>
           <Route path="/" element={<List />} />
           <Route path="/details/:id" element={<ShowDetalis />} /> {/* שים את זה בנפרד */}
         </Routes >

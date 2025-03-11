@@ -21,7 +21,7 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
 
     const handleAddToCart = (event) => {
         event.preventDefault();
-        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, quantity: 1 }));
+        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, img: item.img, quantity: 1, }));
         setCartPopupOpen(true);
         setTimeout(() => {
             setCartPopupOpen(false);
@@ -36,7 +36,7 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
     const removeProduct = async (event) => {
         event.stopPropagation();
         try {
-            let res = await deleteById(item._id,currentUser?.token);
+            let res = await deleteById(item._id, currentUser?.token);
             console.log(res.data);
             onDelete(item._id);
         } catch (err) {
@@ -62,10 +62,13 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            paddingTop: '20px'        }}>
-            <Card sx={{ borderRadius: '20px', width: '100%', position: 'relative', paddingTop: '20px'
+            paddingTop: '20px'
+        }}>
+            <Card sx={{
+                borderRadius: '20px', width: '100%', position: 'relative', paddingTop: '20px'
                 // border: '3px solid #00174F'
-             }}>
+            }}>
+                {/* <img src={`./${item.img}`}/> */}
                 <Box sx={{ position: 'relative' }}>
                     <CardMedia
                         component="img"
@@ -99,7 +102,7 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
                                 <ShoppingCartIcon sx={{ color: "#00174F" }} />
                             </IconButton>
                         )}
-                        <IconButton onClick={toggleFavorite} sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f8f8f8' } }}>
+                        <IconButton onClick={toggleFavorite} sx={{ borderRadius: '50%', '&:hover': { bgcolor: '#f8f8f8' } }}>
                             {isFavorited ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon sx={{ color: "red" }} />}
                         </IconButton>
                     </Box>

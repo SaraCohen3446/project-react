@@ -53,6 +53,7 @@ const OrderSlice = createSlice({
     // פונקציה להוספת פריט לעגלה
     addItem: (state, action) => {
       const existingItem = state.arr.find(item => item._id === action.payload._id);
+      console.log(existingItem);
       if (existingItem) {
         existingItem.qty++;
       } else {
