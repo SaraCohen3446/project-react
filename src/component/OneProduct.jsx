@@ -54,21 +54,21 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
             width: 300,
             height: 'auto',
             margin: '20px',
-            border: '3px solid #00174F',
-            borderRadius: '20px',
+            // border: '3px solid #00174F',
+            // borderRadius: '20px',
             boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.1)',
             position: 'relative',
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            paddingTop: '20px'
+            paddingTop: 0
         }}>
             <Card sx={{
-                borderRadius: '20px', width: '100%', position: 'relative', paddingTop: '20px'
+                // borderRadius: '20px',
+                width: '100%', position: 'relative', paddingTop: '20px'
                 // border: '3px solid #00174F'
             }}>
-                {/* <img src={`./${item.img}`}/> */}
                 <Box sx={{ position: 'relative' }}>
                     <CardMedia
                         component="img"
@@ -86,28 +86,31 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
                         gap: 1
                     }}>
                         {currentUser?.role === "MANAGER" && (
-                            <IconButton onClick={(e) => { e.preventDefault(); removeProduct(e); }} sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f8f8f8' } }}>
+                            <IconButton
+                                onClick={(e) => { e.preventDefault(); removeProduct(e); }}
+                                sx={{ bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" } }}>
                                 <DeleteIcon sx={{ color: "#00174F" }} />
                             </IconButton>
                         )}
-                        {currentUser?.role === "MANAGER" && (
-                            <Link to="/FormProduct" state={item} onClick={(e) => e.stopPropagation()}>
-                                <IconButton sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f8f8f8' } }}>
-                                    <EditIcon sx={{ color: "#00174F" }} />
-                                </IconButton>
-                            </Link>
-                        )}
-                        {showAddToCart && (
-                            <IconButton onClick={handleAddToCart} sx={{ bgcolor: 'white', '&:hover': { bgcolor: '#f8f8f8' } }}>
-                                <ShoppingCartIcon sx={{ color: "#00174F" }} />
+                        <Link to="/FormProduct" state={item} onClick={(e) => e.stopPropagation()}>
+                            <IconButton
+                                sx={{ bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" } }}>
+                                <EditIcon sx={{ color: "#00174F" }} />
                             </IconButton>
-                        )}
-                        <IconButton onClick={toggleFavorite} sx={{ borderRadius: '50%', '&:hover': { bgcolor: '#f8f8f8' } }}>
+                        </Link>
+                        <IconButton
+                            onClick={handleAddToCart}
+                            sx={{ bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" } }}>
+                            <ShoppingCartIcon sx={{ color: "#00174F" }} />
+                        </IconButton>
+                        <IconButton
+                            onClick={toggleFavorite}
+                            sx={{ bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" } }}>
                             {isFavorited ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon sx={{ color: "red" }} />}
                         </IconButton>
                     </Box>
                 </Box>
-            </Card>
+            </Card >
             <CardContent sx={{ textAlign: 'center', width: '100%' }}>
                 <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#00174F' }}>
                     {item.name}
@@ -117,7 +120,7 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
                 </Typography>
             </CardContent>
             {cartPopupOpen && <MinCart setCartPopupOpen={setCartPopupOpen} cartPopupOpen={cartPopupOpen} />}
-        </Box>
+        </Box >
     );
 };
 

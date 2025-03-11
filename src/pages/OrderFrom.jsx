@@ -40,9 +40,6 @@ const schema = Joi.object({
 });
 
 const OrderForm = ( ) => {
-
-
-
     let currentUser = useSelector(st => st.user.user);
     let products = useSelector(st => st.cart.arr);
 

@@ -1,43 +1,40 @@
-import { React, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, reduce, addItem } from '../features/OrderSlice.js';
-import { Container, Typography, IconButton, Box, Paper, Divider, Grid } from '@mui/material';
+import { Container, Typography, IconButton, Box, Paper, Divider, Grid, Button, Modal } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useNavigate } from 'react-router-dom';
 import ChekForOrder from './ChekForOrder.jsx';
-import OrderForm from './OrderFrom.jsx';
-
 
 const Cart = () => {
-    const cart = useSelector((state) => state.cart.arr || []);
-    const totalPrice = useSelector((state) => state.cart.sum);
-    const currentUser = useSelector((st) => st.user.user);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const cart = useSelector((state) => state.cart.arr || []);  // קבלת המוצרים מהקופה
+    const totalPrice = useSelector((state) => state.cart.sum);  // סך המחיר של כל המוצרים בקופה
+    const currentUser = useSelector((st) => st.user.user);  // קבלת המשתמש הנוכחי
+    const dispatch = useDispatch();  // הפונקציות של ה-Redux
+    const navigate = useNavigate();  // ניווט לעמודים אחרים
 
     const [isCheckForOrderOpen, setCheckForOrderOpen] = useState(false); // מצב לפתיחת CheckForOrder
 
-
     const handleRemove = (id) => {
-        dispatch(removeItem({ _id: id }));
+        dispatch(removeItem({ _id: id }));  // הסרת פריט מהקופה
     };
 
     const handleReduce = (id) => {
-        dispatch(reduce({ _id: id }));
+        dispatch(reduce({ _id: id }));  // צמצום כמות פריט בקופה
     };
 
     const handleAdd = (item) => {
-        dispatch(addItem(item));
+        dispatch(addItem(item));  // הוספת פריט לקופה
     };
 
     // פונקציה שמבצעת את הפעולה כשאין currentUser
     const handleCheckForOrder = () => {
         if (!currentUser) {
-            setCheckForOrderOpen(true);
+            setCheckForOrderOpen(true);  // פותח את חלון ההזמנה אם אין משתמש
         } else {
-            navigate("/orderForm")
+            navigate("/orderForm")  // אם יש משתמש, מנווט לעמוד פרטי ההזמנה
         }
     };
 
@@ -100,8 +97,11 @@ const Cart = () => {
 
                             <Grid item xs={2.5} sx={{ textAlign: 'right', position: 'relative', paddingBottom: '10px' }}>
                                 <Box sx={{ position: 'absolute', bottom: '-10px', right: 0 }}>
+                                    <Typography sx={{ fontWeight: 'bold', color: '#00174F', fontSize: '0.9rem', marginTop: '5px' }}>
+                                        {item.qty} x ${item.price.toFixed(2)} {/* כמות x מחיר פר יחידה */}
+                                    </Typography>
                                     <Typography sx={{ fontWeight: 'bold', color: '#00174F', fontSize: '1.2rem' }}>
-                                        ${item.price.toFixed(2)}
+                                        ${(item.price * item.qty).toFixed(2)} {/* מחיר כולל כפול כמות */}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -111,13 +111,27 @@ const Cart = () => {
             )}
             <Divider sx={{ my: 3 }} />
             <Typography variant="h5" sx={{ textAlign: 'center', color: '#00174F', fontWeight: 'bold' }}>
-                Total Price: ${totalPrice.toFixed(2)}
+                Total Price: ${totalPrice.toFixed(2)} {/* סך המחיר הכולל של כל המוצרים בקופה */}
             </Typography>
 
             <div>
-                <button onClick={handleCheckForOrder}>סיים הזמנה</button> {/* כפתור עם התנאי */}
-                {isCheckForOrderOpen && <ChekForOrder />}
+                ({cart}&&{<Button onClick={handleCheckForOrder} sx={{ backgroundColor: '#00174F', color: 'white', padding: '10px 20px', borderRadius: '4px' }}>
+                    Finish Order
+                </Button>})
             </div>
+
+            {/* Modal for CheckForOrder */}
+            <Modal
+                open={isCheckForOrderOpen}
+                onClose={() => setCheckForOrderOpen(false)}
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                <ChekForOrder />
+            </Modal>
         </Container>
     );
 };
