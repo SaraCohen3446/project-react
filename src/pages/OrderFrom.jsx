@@ -8,6 +8,8 @@ import Joi from 'joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useNavigate } from 'react-router-dom';
 import { resetCart } from '../features/OrderSlice';
+import Cards from 'react-credit-cards-2';
+
 
 
 

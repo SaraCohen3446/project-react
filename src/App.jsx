@@ -12,6 +12,7 @@ import FormProduct from './pages/FormProduct';
 import ShowDetalis from './component/ShowDetails';
 import CheckForOrder from './pages/ChekForOrder';
 import OrderForm from './pages/OrderFrom';
+import ProtectedRoute from './component/ProtectedRoute';
 
 function App() {
 
@@ -20,7 +21,7 @@ function App() {
       <NavBar />
       <div style={{ marginTop: '160px' }}> {/*navbar הוספת רווח מתח ל */}
         <Routes>
-          <Route path="/FormProduct" element={<FormProduct />} />
+          <Route path="/FormProduct" element={<ProtectedRoute><FormProduct /></ProtectedRoute>} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signin" element={<SignUp />} />
