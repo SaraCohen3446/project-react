@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../features/OrderSlice";
-import { Card, CardContent, CardMedia, Typography, IconButton, Box } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
 import { deleteById } from "../api/ProductApi";
 import MinCart from "./MinCart";
 import { Link, useNavigate } from "react-router-dom";
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'; // אייקון מודרני יותר
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
@@ -18,10 +19,9 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
     const [isFavorited, setIsFavorited] = useState(false);
     const navigate = useNavigate();
 
-
     const handleAddToCart = (event) => {
         event.preventDefault();
-        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, img: item.img, quantity: 1, }));
+        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, img: item.img, quantity: 1 }));
         setCartPopupOpen(true);
         setTimeout(() => {
             setCartPopupOpen(false);
@@ -51,76 +51,97 @@ const OneProduct = ({ item, showAddToCart = true, onDelete }) => {
 
     return (
         <Box sx={{
-            width: 300,
-            height: 'auto',
-            margin: '20px',
-            // border: '3px solid #00174F',
-            // borderRadius: '20px',
-            boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.1)',
-            position: 'relative',
-            overflow: 'hidden',
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            paddingTop: 0
-        }}>
-            <Card sx={{
-                // borderRadius: '20px',
-                width: '100%', position: 'relative', paddingTop: '20px'
-                // border: '3px solid #00174F'
-            }}>
-                <Box sx={{ position: 'relative' }}>
-                    <CardMedia
-                        component="img"
-                        image={`../src/assets/${item.img}`}
-                        alt={item.name}
-                        sx={{ height: 220, objectFit: 'cover', cursor: 'pointer' }}
-                        onClick={goToDetails}
-                    />
+            position: 'relative',
+            cursor: 'pointer',
+            paddingBottom: 2,
+            borderBottom: '1px solid #ddd',
+            marginBottom: 2
+        }} onClick={goToDetails}>
+
+            {/* Product Image */}
+            <Box sx={{ position: 'relative', width: 300 }}>
+                <Box component="img"
+                    src={`../src/assets/${item.img}`}
+                    alt={item.name}
+                    sx={{ width: '100%', height: "300px", objectFit: 'cover' }} // תמונה יותר ארוכה
+                />
+
+                {/* Edit and Delete Icons (Above Favorite Icon) */}
+                {currentUser?.role === "MANAGER" && (
                     <Box sx={{
-                        position: 'absolute',
-                        bottom: 10,
-                        left: 10,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 1
+                        position: 'absolute', top: 180, left: 10, display: 'flex', flexDirection: 'column', gap: 0
                     }}>
-                        {currentUser?.role === "MANAGER" && (
-                            <IconButton
-                                onClick={(e) => { e.preventDefault(); removeProduct(e); }}
-                                sx={{ bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" } }}>
-                                <DeleteIcon sx={{ color: "#00174F" }} />
-                            </IconButton>
-                        )}
+                        <IconButton
+                            onClick={(e) => { e.preventDefault(); removeProduct(e); }}
+                            sx={{
+                                bgcolor: 'transparent',
+                                outline: "none",
+                                "&:focus, &:active": { outline: "none", boxShadow: "none" }
+                            }}
+                        >
+                            <DeleteIcon sx={{ color: "#808080" }} />
+                        </IconButton>
                         <Link to="/FormProduct" state={item} onClick={(e) => e.stopPropagation()}>
                             <IconButton
-                                sx={{ bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" } }}>
-                                <EditIcon sx={{ color: "#00174F" }} />
+                                sx={{
+                                    bgcolor: 'transparent',
+                                    outline: "none",
+                                    "&:focus, &:active": { outline: "none", boxShadow: "none" }
+                                }}
+                            >
+                                <EditIcon sx={{ color: "#808080" }} />
                             </IconButton>
                         </Link>
-                        <IconButton
-                            onClick={handleAddToCart}
-                            sx={{ bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" } }}>
-                            <ShoppingCartIcon sx={{ color: "#00174F" }} />
-                        </IconButton>
-                        <IconButton
-                            onClick={toggleFavorite}
-                            sx={{ bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" } }}>
-                            {isFavorited ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon sx={{ color: "red" }} />}
-                        </IconButton>
                     </Box>
-                </Box>
-            </Card >
-            <CardContent sx={{ textAlign: 'center', width: '100%' }}>
-                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', color: '#00174F' }}>
-                    {item.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    Price: ${item.price.toFixed(2)}
-                </Typography>
-            </CardContent>
+                )}
+
+                {/* Favorite Icon */}
+                <IconButton
+                    onClick={(event) => {
+                        event.stopPropagation();
+                        toggleFavorite(event);
+                    }}
+                    sx={{
+                        position: 'absolute', bottom: 10, left: 10,
+                        bgcolor: 'transparent', outline: "none", "&:focus, &:active": { outline: "none", boxShadow: "none" }
+                    }}>
+                    {isFavorited ? <FavoriteIcon sx={{ color: "red" }} /> : <FavoriteBorderIcon sx={{ color: "red" }} />}
+                </IconButton>
+            </Box>
+
+            {/* Product Info */}
+            <Typography variant="body1" sx={{ fontWeight: 'bold', color: '#00174F', marginTop: 1, textAlign: 'left', width: '100%' }}>
+                {item.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'left', width: '100%' }}>
+                ${item.price}
+            </Typography>
+
+            {/* Add to Cart Button (Stylish Icon) */}
+            <IconButton
+                onClick={(event) => {
+                    event.stopPropagation();
+                    handleAddToCart(event);
+                }}
+                sx={{
+                    bgcolor: 'transparent',
+                    color: '#808080',
+                    position: 'absolute',
+                    bottom: 10, right: 10,
+                    outline: "none",
+                    transition: 'background 0.2s',
+                    "&:hover": { bgcolor: "#f0f0f0" }, // אפקט רקע עדין בלחיצה
+                    "&:focus, &:active": { outline: "none", boxShadow: "none" }
+                }}>
+                <ShoppingCartOutlinedIcon sx={{ fontSize: 28 }} />
+            </IconButton>
+
             {cartPopupOpen && <MinCart setCartPopupOpen={setCartPopupOpen} cartPopupOpen={cartPopupOpen} />}
-        </Box >
+        </Box>
     );
 };
 

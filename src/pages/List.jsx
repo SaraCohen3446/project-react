@@ -5,6 +5,8 @@ import { getAllProducts, totalPages } from "../api/ProductApi";
 import { Pagination, Stack } from "@mui/material";
 
 
+
+
 // import CustomFilterMenu from "../component/CustomFilterMenu";
 
 
@@ -67,7 +69,18 @@ const List = () => {
     return (
         <>
 
-        {/* <CustomFilterMenu /> */}
+            {/* <CustomFilterMenu /> */}
+
+            {/* תמונת רקע */}
+
+            {/* <div
+                style={{
+                    width: '100%',
+                    height: '300px',
+                    backgroundImage: `url(${backgroundImg2})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                }}></div> */}
 
 
             {loading ? ( // הצגת הודעה אם בטעינה
@@ -77,7 +90,7 @@ const List = () => {
             ) : arr.length === 0 ? ( // הצגת הודעה אם אין מוצרים
                 <h1>No Product Found</h1>
             ) : (
-               
+
                 <ul style={{ display: 'flex', flexWrap: 'wrap', listStyleType: 'none', padding: 0 }}>
                     {arr.map(item => (
                         <li key={item._id} style={{ margin: '10px', flex: '1 0 auto', maxWidth: '30%' }}>
@@ -88,8 +101,8 @@ const List = () => {
                     ))}
                 </ul>
             )}
-           <Stack spacing={2} alignItems="center" sx={{ mt: 3 }}>
-                <Pagination          
+            <Stack spacing={2} alignItems="center" sx={{ mt: 3 }}>
+                <Pagination
                     count={totalPage}
                     page={currentPage}
                     onChange={(event, value) => setCurrentPage(value)}

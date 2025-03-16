@@ -9,7 +9,7 @@ const MinCart = ({ setCartPopupOpen, cartPopupOpen }) => {
         <Drawer
             anchor="right"
             open={cartPopupOpen}
-            onClose={() => setCartPopupOpen(false)}
+            onClick={(e) => { e.preventDefault(); setCartPopupOpen(false); }}
             aria-labelledby="cart-popup-title"
             aria-describedby="cart-popup-description"
             sx={{
@@ -49,11 +49,9 @@ const MinCart = ({ setCartPopupOpen, cartPopupOpen }) => {
                                 }
                             />
                             <ListItemSecondaryAction>
-                                <img
-                                    src={imageUrl} // השתמש במשתנה כאן
-                                    alt={cartItem.name}
-                                    style={{ maxWidth: '60px', borderRadius: '4px', marginLeft: '10px' }}
-                                />
+                            <img src={`../src/assets/${cartItem.img}`} alt={cartItem.name} style={{ maxWidth: '60px', borderRadius: '4px', marginLeft: '10px' }} />
+
+                                
                             </ListItemSecondaryAction>
                         </ListItem>
                     );

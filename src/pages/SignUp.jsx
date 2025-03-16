@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/userSlice.js";
 import { Container, TextField, Button, Typography, Box, CircularProgress, Alert, Paper, InputAdornment, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
     const [userName, setUserName] = useState("");
@@ -10,11 +11,12 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [notification, setNotification] = useState(null);
+    const navigate=useNavigate();
     const dispatch = useDispatch();
     const { loading, error, user } = useSelector(state => state.user);
 
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^[A-Za-z\\d]{8,}$/;
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -34,12 +36,18 @@ const SignUp = () => {
     };
 
     useEffect(() => {
-        if (error) {
-            setNotification({ type: "error", message: error.message });
-        } else if (user) {
-            setNotification({ type: "success", message: `Registration successful! Welcome, ${user.userName}!` });
+        error &&
+            setNotification({ type: "error", message: error.message }); // אם יש שגיאה, מציג את ההודעה המתאימה
+    }, [error]);
+
+    useEffect(() => {
+        if (user) {
+            setNotification({ type: "success", message: `Welcome ${user.userName}!` });
+            const timer = setTimeout(() => {
+                navigate("/");
+            }, 1000);
         }
-    }, [error, user]);
+    }, [user]);
 
     useEffect(() => {
         if (notification) {
@@ -57,14 +65,14 @@ const SignUp = () => {
                 <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                     <TextField label="Username" variant="outlined" fullWidth value={userName} onChange={(e) => setUserName(e.target.value)} required />
                     <TextField label="Email" variant="outlined" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} required />
-                    <TextField 
-                        label="Password" 
-                        type={showPassword ? "text" : "password"} 
-                        variant="outlined" 
-                        fullWidth 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        required 
+                    <TextField
+                        label="Password"
+                        type={showPassword ? "text" : "password"}
+                        variant="outlined"
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">

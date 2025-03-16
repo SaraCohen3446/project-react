@@ -24,7 +24,7 @@ function App() {
           <Route path="/FormProduct" element={<ProtectedRoute><FormProduct /></ProtectedRoute>} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LogIn />} />
-          <Route path="/signin" element={<SignUp />} />
+          <Route path="/signUp" element={<SignUp />} />
           <Route path="/checkfororder" element={<CheckForOrder />} /> {/* עדכון לנתיב החדש */}
           <Route path="/orderForm" element={<OrderForm/>}/>
           <Route path="/" element={<List />} />
