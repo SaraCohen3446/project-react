@@ -6,7 +6,7 @@ const ProtectedRoute = ({children}) => {
     let user=useSelector(st=>st.user.user)
 
     if(!user||user?.role=="USER")
-        return <Navigate to="/checkfororder"/>
+        return <Navigate to="/ChekUser"/>
     return children;
 }
  

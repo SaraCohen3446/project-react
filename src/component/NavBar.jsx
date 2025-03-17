@@ -85,7 +85,7 @@ const NavBar = () => {
                     </Button>
 
                     {/*Login*/}
-                    <Button
+                    {/* <Button
                         color="inherit"
                         component={Link}
                         to="/login"
@@ -102,9 +102,9 @@ const NavBar = () => {
                     >
                         Login
 
-                    </Button>
+                    </Button> */}
                     {/* SignUp */}
-                    <Button
+                    {/* <Button
                         color="inherit"
                         component={Link}
                         to="/signUp"
@@ -121,57 +121,10 @@ const NavBar = () => {
                     >
                         SignUp
 
-                    </Button>
+                    </Button> */}
                 </Box>
 
-                {/* חיפוש מוצר */}
-                <Box sx={{ position: 'absolute', top: 60, right: 110, display: 'flex', alignItems: 'center' }}>
-                    {showSearch && (
-                        <TextField
-                            value={searchTerm}
-                            onChange={handleSearchChange}
-                            onBlur={handleBlur}
-                            autoFocus
-                            variant="outlined"
-                            size="small"
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    backgroundColor: '#00174F',
-                                    color: 'white',
-                                    borderRadius: '30px',
-                                    paddingRight: '10px',
-                                    '& fieldset': { border: 'none' },
-                                },
-                                '& .MuiInputBase-input': {
-                                    color: 'white',
-                                    padding: '10px 20px',
-                                },
-                                width: '150px', // אתה יכול לשנות את הרוחב כאן
-                            }}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        {/* אפשר להוסיף משהו כאן אם רוצים */}
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    )}
-                    <IconButton
-                        sx={{
-                            color: 'white', // הצבע של האייקון יהיה לבן
-                            backgroundColor: '#00174F', // צבע כחול
-                            borderRadius: '50%',
-                            padding: '8px',
-                            '&:hover': {
-                                backgroundColor: '#00174F', // צבע כחול גם בהובר
-                            },
-                        }}
-                        onClick={handleSearchClick}
-                    >
-                        <SearchIcon sx={{ color: 'white' }} />  {/* אייקון לבן */}
-                    </IconButton>
-                </Box>
+                
 
                 {/* אייקון סל קניות עם כמות מוצרים */}
                 <Box sx={{ position: 'absolute', right: 10, top: 55, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -251,6 +204,29 @@ const NavBar = () => {
                                             Add product <AddIcon fontSize="small" />
                                         </Button>
                                     )}
+                                    {user?.role === "MANAGER" && (
+                                        <Button
+                                            onClick={() => navigate("/AllOrders")}
+                                            sx={{
+                                                color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none',
+                                                fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', // כפתורים צרים יותר
+                                                '&:hover': { backgroundColor: 'white' } // בלי שינוי בהובר
+                                            }}
+                                        >
+                                            All orders
+                                        </Button>
+
+                                    )}
+                                    <Button
+                                        onClick={() => navigate("/OrderByUser")}
+                                        sx={{
+                                            color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none',
+                                            fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', // כפתורים צרים יותר
+                                            '&:hover': { backgroundColor: 'white' } // בלי שינוי בהובר
+                                        }}
+                                    >
+                                        Your orders
+                                    </Button>
                                     <Button
                                         onClick={() => dispatch(logOut())}
                                         sx={{
@@ -261,6 +237,9 @@ const NavBar = () => {
                                     >
                                         LogOut <ExitToAppIcon fontSize="small" />
                                     </Button>
+
+
+
                                 </Box>
                             </>
                         ) : (

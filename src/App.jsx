@@ -10,9 +10,12 @@ import LogIn from './pages/LogIn';
 import SignUp from './pages/SignUp';
 import FormProduct from './pages/FormProduct';
 import ShowDetalis from './component/ShowDetails';
-import CheckForOrder from './pages/ChekForOrder';
+import ChekUser from './pages/ChekUser';
 import OrderForm from './pages/OrderFrom';
 import ProtectedRoute from './component/ProtectedRoute';
+import AllOrders from './pages/AllOrders';
+import OrderByUser from './pages/OrderByUser';
+
 
 function App() {
 
@@ -25,8 +28,10 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/signUp" element={<SignUp />} />
-          <Route path="/checkfororder" element={<CheckForOrder />} /> {/* עדכון לנתיב החדש */}
-          <Route path="/orderForm" element={<OrderForm/>}/>
+          <Route path="/ChekUser" element={<ChekUser />} /> {/* עדכון לנתיב החדש */}
+          <Route path="/orderForm" element={<OrderForm />} />
+          <Route path='/AllOrders' element={<AllOrders />} />
+          <Route path='/OrderByUser' element={<OrderByUser />} />
           <Route path="/" element={<List />} />
           <Route path="/details/:id" element={<ShowDetalis />} /> {/* שים את זה בנפרד */}
         </Routes >

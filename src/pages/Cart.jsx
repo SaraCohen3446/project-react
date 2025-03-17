@@ -6,7 +6,7 @@ import { Delete } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { useNavigate } from 'react-router-dom';
-import ChekForOrder from './ChekForOrder.jsx';
+import ChekUser from './ChekUser.jsx';
 
 const Cart = () => {
     const cart = useSelector((state) => state.cart.arr || []);  // קבלת המוצרים מהקופה
@@ -15,7 +15,7 @@ const Cart = () => {
     const dispatch = useDispatch();  // הפונקציות של ה-Redux
     const navigate = useNavigate();  // ניווט לעמודים אחרים
 
-    const [isCheckForOrderOpen, setCheckForOrderOpen] = useState(false); // מצב לפתיחת CheckForOrder
+    const [isCChekUserOpen, setCChekUserOpen] = useState(false); // מצב לפתיחת ChekUser
 
     const handleRemove = (id) => {
         dispatch(removeItem({ _id: id }));  // הסרת פריט מהקופה
@@ -30,9 +30,9 @@ const Cart = () => {
     };
 
     // פונקציה שמבצעת את הפעולה כשאין currentUser
-    const handleCheckForOrder = () => {
+    const handleChekUser = () => {
         if (!currentUser) {
-            setCheckForOrderOpen(true);  // פותח את חלון ההזמנה אם אין משתמש
+            setChekUserOpen(true);  // פותח את חלון ההזמנה אם אין משתמש
         } else {
             navigate("/orderForm")  // אם יש משתמש, מנווט לעמוד פרטי ההזמנה
         }
@@ -116,24 +116,24 @@ const Cart = () => {
 
             <div>
                 {cart.length > 0 && (
-                    <Button onClick={handleCheckForOrder} sx={{ backgroundColor: '#00174F', color: 'white', padding: '10px 20px', borderRadius: '4px' }}>
+                    <Button onClick={handleChekUser} sx={{ backgroundColor: '#00174F', color: 'white', padding: '10px 20px', borderRadius: '4px' }}>
                         Finish Order
                     </Button>
                 )}
 
             </div>
 
-            {/* Modal for CheckForOrder */}
+            {/* Modal for CChekUser */}
             <Modal
-                open={isCheckForOrderOpen}
-                onClose={() => setCheckForOrderOpen(false)}
+                open={isCChekUserOpen}
+                onClose={() => setCChekUserOpen(false)}
                 sx={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}
             >
-                <ChekForOrder />
+                <ChekUser />
             </Modal>
         </Container>
     );

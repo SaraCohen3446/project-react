@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Box, Typography, Grid, Button } from '@mui/material'; 
 import { Link } from 'react-router-dom'; 
 
-const ChekForOrder = () => {
+const ChekUser = () => {
     return (
         // Box משמש ליצירת קונטיינר עם עיצוב מותאם אישית
         <Box
@@ -82,4 +82,4 @@ const ChekForOrder = () => {
     );
 };
 
-export default ChekForOrder;
+export default ChekUser;

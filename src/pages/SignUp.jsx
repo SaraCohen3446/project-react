@@ -11,7 +11,7 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [notification, setNotification] = useState(null);
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { loading, error, user } = useSelector(state => state.user);
 
@@ -27,17 +27,38 @@ const SignUp = () => {
             return;
         }
 
-        if (!passwordRegex.test(password)) {
-            setNotification({ type: "error", message: "Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one special character." });
+        if (password.length < 8) {
+            setNotification({ type: "error", message: "Password must be at least 8 characters long." });
             return;
         }
+
+        if (!/[A-Z]/.test(password)) {
+            setNotification({ type: "error", message: "Password must include at least one uppercase letter." });
+            return;
+        }
+
+        if (!/[a-z]/.test(password)) {
+            setNotification({ type: "error", message: "Password must include at least one lowercase letter." });
+            return;
+        }
+
+        if (!/[0-9]/.test(password)) {
+            setNotification({ type: "error", message: "Password must include at least one number." });
+            return;
+        }
+
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            setNotification({ type: "error", message: "Password must include at least one special character." });
+            return;
+        }
+
 
         dispatch(registerUser({ userName, email, password }));
     };
 
     useEffect(() => {
         error &&
-            setNotification({ type: "error", message: error.message }); // אם יש שגיאה, מציג את ההודעה המתאימה
+            setNotification({ type: "error", message: error.message });
     }, [error]);
 
     useEffect(() => {

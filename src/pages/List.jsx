@@ -2,108 +2,111 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import OneProduct from "../component/OneProduct";
 import { getAllProducts, totalPages } from "../api/ProductApi";
-import { Pagination, Stack } from "@mui/material";
-
-
-
-
-// import CustomFilterMenu from "../component/CustomFilterMenu";
-
-
+import { Pagination, Stack, TextField, Box } from "@mui/material";
+import CustomFilterMenu from "../component/CustomFilterMenu";
 
 const List = () => {
-    const [arr, setArr] = useState([]); // ניהול המוצרים במצב מקומי
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(true); // מצב לטעינת נתונים
-    const [error, setError] = useState(null); // טיפול בשגיאות
-    const [currentPage, setCurrentPage] = useState(1)
-    const [totalPage, setTotalPage] = useState(1)
+    const [arr, setArr] = useState([]);
+    const [filteredArr, setFilteredArr] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, setTotalPage] = useState(1);
+    const [filters, setFilters] = useState({ category: "All", priceRange: "All", color: "All" });
+    const [searchTerm, setSearchTerm] = useState(""); // שדה חיפוש
 
-
+    // פונקציה להורדת מוצרים
     const fetchProducts = async () => {
         try {
-            const response = await getAllProducts(currentPage, 4); // קריאה ל-API
-            setArr(response.data); // שמירת המוצרים במצב
-            setLoading(false); // עצירת טעינה
+            const response = await getAllProducts(currentPage, 4);
+            setArr(response.data);
+            setFilteredArr(response.data);
+            setLoading(false);
         } catch (err) {
-            setError("Error fetching products!"); // טיפול בשגיאות
-            setLoading(false); // עצירת טעינה
+            setError("Error fetching products!");
+            setLoading(false);
         }
     };
 
+    // פונקציה לחישוב מספר הדפים
     const fetchTotalPages = async () => {
         try {
             const response = await totalPages(4);
-            setTotalPage(response.data)
+            setTotalPage(response.data);
+        } catch (err) {
+            console.error("Error fetching total pages:", err);
+            alert("Error fetching total pages");
         }
-        catch (err) {
-            console.log(err);
-            alert("error fetching total pages")
-        }
-    }
+    };
 
-    const deleteProductFromArr = (id) => {
-        let copy = arr.filter(p => p._id !== id)
-        setArr(copy)
-    }
-
-    /**
-     * בכל פעם שהעמוד הנוכחי משתנה
-     */
     useEffect(() => {
-        fetchProducts(); // קריאה ל-API כשמועלה הקומפוננטה
+        fetchProducts();
     }, [currentPage]);
 
-    /**
-     * רק בעת טעינת הדף
-     */
     useEffect(() => {
         fetchTotalPages();
     }, []);
 
-    const handleCartClick = () => {
-        navigate("/cart");
-    };
+    // סינון המוצרים לפי פילטרים וחיפוש
+    useEffect(() => {
+        let filtered = arr.filter(product => {
+            const isCategoryMatch = filters.category === "All" || product.category === filters.category;
+            const isColorMatch = filters.color === "All" || product.color === filters.color;
+            const isPriceMatch = filters.priceRange === "All" || 
+                (product.price >= parseInt(filters.priceRange.split("-")[0]) && product.price <= parseInt(filters.priceRange.split("-")[1]));
+            const isSearchMatch = searchTerm === "" || product.name.toLowerCase().includes(searchTerm.toLowerCase());
 
+            return isCategoryMatch && isColorMatch && isPriceMatch && isSearchMatch;
+        });
+        setFilteredArr(filtered);
+    }, [filters, arr, searchTerm]); // הסינון יבוצע גם אם אחד מהם משתנה
+
+    // פונקציה למחיקת מוצר מהמערך
+    const deleteProductFromArr = (id) => {
+        const updatedArr = arr.filter(product => product._id !== id);
+        setArr(updatedArr);
+        setFilteredArr(updatedArr);
+    };
 
     return (
         <>
+            {/* שורת פילטרים ושדה חיפוש */}
+            <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+                <CustomFilterMenu filters={filters} setFilters={setFilters} />
+                
+                <TextField 
+                    label="Search by name"
+                    variant="outlined"
+                    size="small"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    sx={{ width: 250 }}
+                />
+            </Box>
 
-            {/* <CustomFilterMenu /> */}
-
-            {/* תמונת רקע */}
-
-            {/* <div
-                style={{
-                    width: '100%',
-                    height: '300px',
-                    backgroundImage: `url(${backgroundImg2})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}></div> */}
-
-
-            {loading ? ( // הצגת הודעה אם בטעינה
+            {/* הצגת מוצרים */}
+            {loading ? (
                 <h1>Loading...</h1>
-            ) : error ? ( // הצגת הודעת שגיאה אם יש
+            ) : error ? (
                 <h1>{error}</h1>
-            ) : arr.length === 0 ? ( // הצגת הודעה אם אין מוצרים
-                <h1>No Product Found</h1>
+            ) : filteredArr.length === 0 ? (
+                <h1>No Products Found</h1>
             ) : (
-
                 <ul style={{ display: 'flex', flexWrap: 'wrap', listStyleType: 'none', padding: 0 }}>
-                    {arr.map(item => (
+                    {filteredArr.map(item => (
                         <li key={item._id} style={{ margin: '10px', flex: '1 0 auto', maxWidth: '30%' }}>
                             <Link to={`details/${item._id}`} style={{ textDecoration: 'none' }}>
-                                <OneProduct item={item} onDelete={deleteProductFromArr} style={{ width: '100%', height: 'auto' }} />
+                                <OneProduct item={item} onDelete={deleteProductFromArr} />
                             </Link>
                         </li>
                     ))}
                 </ul>
             )}
+
+            {/* ניווט עמודים */}
             <Stack spacing={2} alignItems="center" sx={{ mt: 3 }}>
                 <Pagination
-                    count={totalPage}
+                    count={totalPage || 1}
                     page={currentPage}
                     onChange={(event, value) => setCurrentPage(value)}
                     color="primary"
@@ -121,7 +124,7 @@ const List = () => {
                             },
                         },
                         '.Mui-selected': {
-                            backgroundColor: '#D81633', // צבע הבחירה
+                            backgroundColor: '#D81633',
                             color: '#fff',
                         },
                         '.MuiPaginationItem-ellipsis': {
@@ -130,6 +133,7 @@ const List = () => {
                     }}
                 />
             </Stack>
+
             <Outlet />
         </>
     );
