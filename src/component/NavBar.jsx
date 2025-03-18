@@ -1,26 +1,25 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { logOut } from '../features/userSlice';
-import { AppBar, Toolbar, Button, Box, IconButton, Badge, Typography, Menu, MenuItem, Avatar, Divider, TextField, InputAdornment } from '@mui/material';
+import { AppBar, Toolbar, Button, Box, IconButton, Badge, Typography, Menu, MenuItem, Avatar, Divider } from '@mui/material';
 import logo from '../assets/logo.png';
-import homePicture from '../assets/homePicture.png'
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import { updateProfileImage } from '../features/userSlice';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import HomeIcon from '@mui/icons-material/Home'; // אייקון בית אחר
 
-const NavBar = () => {
+
+const NavBar = ({ setFilters }) => {
     const dispatch = useDispatch();
     const user = useSelector(st => st.user.user);
     const navigate = useNavigate();
     const cartCount = useSelector(st => st.cart.count);
     const [anchorEl, setAnchorEl] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [showSearch, setShowSearch] = useState(false);
+    const [selectedFilter, setSelectedFilter] = useState(null);
+    const location = useLocation();
 
     const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
@@ -29,102 +28,57 @@ const NavBar = () => {
         navigate("/cart");
     };
 
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    const handleSearchClick = () => {
-        setShowSearch(prev => !prev);
-    };
-
-    const handleBlur = () => {
-        setTimeout(() => setShowSearch(false), 200);
-    };
-
-    const handleImageUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                dispatch(updateProfileImage(reader.result));
-            };
-            reader.readAsDataURL(file);
-        }
+    const handleCategoryChange = (category) => {
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            category: category
+        }));
+        setSelectedFilter(category);
     };
 
     return (
         <AppBar position="fixed" sx={{ backgroundColor: '#00174F', width: '100%', height: '110px' }}>
             <Toolbar sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 80 }}>
-                {/* לוגו באמצע */}
-                <div>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', height: '70px', mb: 1, backgroundColor: '#00174F' }}>
-                        <img src={logo} alt="Logo" style={{ height: '100px', width: '450px' }} />
-                    </Box>
-                </div>
-
-                <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%', position: 'absolute', top: 57, left: 0, gap: 1 }}>
-                    {/* כפתור בית */}
-                    <Button
-                        color="inherit"
-                        component={Link}
-                        to="/"
-                        sx={{
-                            backgroundColor: '#00174F',
-                            color: 'white',
-                            padding: '10px 20px',
-                            borderRadius: '30px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            fontWeight: 'bold',
-                            '&:hover': { backgroundColor: '#00174F' },
-                        }}
-                    >
-                        HOME
-                        {/* <img src={homePicture} alt="homePicture" style={{ height: '30px', width: '30px' }} /> */}
-
-                    </Button>
-
-                    {/*Login*/}
-                    {/* <Button
-                        color="inherit"
-                        component={Link}
-                        to="/login"
-                        sx={{
-                            backgroundColor: '#00174F',
-                            color: 'white',
-                            padding: '10px 20px',
-                            borderRadius: '30px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            fontWeight: 'bold',
-                            '&:hover': { backgroundColor: '#00174F' },
-                        }}
-                    >
-                        Login
-
-                    </Button> */}
-                    {/* SignUp */}
-                    {/* <Button
-                        color="inherit"
-                        component={Link}
-                        to="/signUp"
-                        sx={{
-                            backgroundColor: '#00174F',
-                            color: 'white',
-                            padding: '10px 20px',
-                            borderRadius: '30px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            fontWeight: 'bold',
-                            '&:hover': { backgroundColor: '#00174F' },
-                        }}
-                    >
-                        SignUp
-
-                    </Button> */}
+                <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', height: '70px', mb: 1 }}>
+                    <img src={logo} alt="Logo" style={{ height: '100px', width: '450px' }} />
                 </Box>
 
-                
+
+                {location.pathname === "/" &&
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%', position: 'absolute', top: 70, left: 7, gap: 1 }}>
+                        {['All', 'Women', 'Men', 'Infant', 'Children'].map(category => (
+                            <Button
+                                key={category}
+                                onClick={() => handleCategoryChange(category)}
+                                color="inherit"
+                                sx={{
+                                    backgroundColor: selectedFilter === category ? 'white' : '#00174F',
+                                    color: selectedFilter === category ? '#00174F' : 'white',
+                                    padding: '5px 12px',  // צמצום הרוחב והגובה
+                                    borderRadius: '20px', // הקטנה ושיפור עיצוב
+                                    fontWeight: 'bold',
+                                    fontSize: '0.75rem', // הקטנת גודל הגופן
+                                    '&:hover': {
+                                        backgroundColor: 'white',
+                                        color: '#00174F',
+                                        transform: 'scale(1.05)',
+                                        transition: 'transform 0.2s ease-in-out',
+                                    },
+                                    '&:active': { transform: 'scale(0.95)' }
+                                }}
+                            >
+                                {category}
+                            </Button>
+
+                        ))}
+                    </Box>}
+
+                {/* כפתור בית */}
+                {location.pathname != "/" &&
+                    <IconButton component={Link} to="/" sx={{ position: 'absolute', left:10, top: 57, p: 1 }}>
+                        <HomeIcon sx={{ fontSize: 30, color: 'white' }} />
+                    </IconButton>}
+
 
                 {/* אייקון סל קניות עם כמות מוצרים */}
                 <Box sx={{ position: 'absolute', right: 10, top: 55, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -150,14 +104,14 @@ const NavBar = () => {
 
 
                 {/* אייקון פרופיל בצד ימין */}
-                <Box sx={{ position: 'absolute', right: 60, top: 60 }}>
+                <Box sx={{ position: 'absolute', right: 60, top: 67 }}>
                     <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
                         <Avatar
                             sx={{
-                                bgcolor: 'white', // הרקע לבן
-                                color: '#00174F', // הצבע של האותיות יהיה כחול
-                                width: 40,
-                                height: 40,
+                                bgcolor: 'white', // הרקע תמיד יהיה לבן
+                                color: '#00174F', // הצבע של האותיות או האייקון יהיה כחול
+                                width: 30, // גודל קטן יותר
+                                height: 30, // גודל קטן יותר
                                 '&:hover': {
                                     bgcolor: 'white', // גם בהובר הרקע לבן
                                 }
@@ -168,9 +122,10 @@ const NavBar = () => {
                             ) : user ? (
                                 "U" // אם אין תמונה, ה- U יהיה בצבע כחול
                             ) : (
-                                <Avatar sx={{ bgcolor: '#00174F', width: 40, height: 40 }} /> // ציור אווטר כחול
+                                <Avatar sx={{ bgcolor: 'white', width: 30, height: 30, color: '#00174F' }} /> // אווטר לבן עם אייקון כחול
                             )}
                         </Avatar>
+
                     </IconButton>
                     <Menu
                         anchorEl={anchorEl}
@@ -201,7 +156,7 @@ const NavBar = () => {
                                                 '&:hover': { backgroundColor: 'white' } // בלי שינוי בהובר
                                             }}
                                         >
-                                            Add product <AddIcon fontSize="small" />
+                                            Add product
                                         </Button>
                                     )}
                                     {user?.role === "MANAGER" && (
@@ -275,7 +230,6 @@ const NavBar = () => {
                 </Box>
             </Toolbar>
         </AppBar>
-
     );
 };
 

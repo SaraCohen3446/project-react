@@ -17,30 +17,37 @@ const FormProduct = () => {
 
 
 
-    // פונקציה לשמירת המוצר
     const save = async (data) => {
         try {
-            // אם יש תמונה ב-Preview, נעדכן אותה ב-data
-            if (imagePreview) {
+            // אם יש תמונה ב-Preview, עדכן אותה בנתונים לפני שליחה
+            if (imagePreview !== item?.img) {
+                // עדכון התמונה אם התמונה החדשה שונה מהתמונה הישנה
                 data.img = imagePreview;
             }
 
             let res;
             if (!item) {
                 res = await addProduct(data, currentUser?.token);
-                alert("Add sucssfuly");
+                alert("Add successful");
             } else {
                 res = await update(item._id, data, currentUser?.token);
-                alert("Edit sucssfuly");
+                alert("Edit successful");
             }
 
-            reset();
+            reset(); // איפוס הטופס אחרי שליחה
         } catch (err) {
-            alert("Problem with add product\n" + err.message);
+            alert("Problem with product\n" + err.message);
             console.log(err);
-
         }
     };
+    
+    useEffect(() => {
+        if (item) {
+            // אם יש תמונה במוצר, הצג אותה ב-preview
+            setImagePreview(item.img);
+        }
+    }, [item]);
+
 
     // פונקציה לטיפול בהעלאת תמונה
     const handleImageChange = async (e) => {

@@ -39,19 +39,21 @@ const LogIn = () => {
     useEffect(() => {
         if (notification) {
             const timer = setTimeout(() => {
-                setNotification(null); 
-            }, 3000); 
-            return () => clearTimeout(timer); 
+                setNotification(null);
+            }, 3000);
+            return () => clearTimeout(timer);
         }
-    }, [notification]); 
+    }, [notification]);
 
     // פונקציה להחלפת מצב ההצגה של הסיסמה
     const handleClickShowPassword = () => {
-        setShowPassword(!showPassword); 
+        setShowPassword(!showPassword);
     };
 
     return (
-        <Container sx={{ top: "0px", width: "1500px", padding: 0, height: "550px", }}>
+        // <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh", padding: 0, }}>
+
+        <Container sx={{ top: "0px", padding: 0, minHeight: "100vh", mt: "230px" }}>
             {/* עטיפה של העמוד ב-Paper עם רקע וסטייל */}
             <Paper elevation={3} sx={{ p: 4, textAlign: "center", bgcolor: "#F7F2F3" }}>
                 <Typography variant="h3" sx={{ mb: 3, color: "#00174F" }}>Login</Typography> {/* כותרת העמוד */}
@@ -69,7 +71,7 @@ const LogIn = () => {
                     {/* שדה לסיסמה */}
                     <TextField
                         label="Password"
-                        type={showPassword ? "text" : "password"} 
+                        type={showPassword ? "text" : "password"}
                         variant="outlined"
                         fullWidth
                         value={password}

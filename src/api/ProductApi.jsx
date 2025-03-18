@@ -28,7 +28,6 @@ export const addProduct = (productData, token) => {
 
 
 export const update = (id, updatedData, token) => {
-    console.log(token);
     
     return axios.put(`${baseUrl}/${id}`, updatedData,{
         headers:{authorization:token}

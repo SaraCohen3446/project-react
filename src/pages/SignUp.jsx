@@ -46,14 +46,10 @@ const SignUp = () => {
             setNotification({ type: "error", message: "Password must include at least one number." });
             return;
         }
-
-        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-            setNotification({ type: "error", message: "Password must include at least one special character." });
-            return;
+        else {
+            dispatch(registerUser({ userName, email, password }));
         }
 
-
-        dispatch(registerUser({ userName, email, password }));
     };
 
     useEffect(() => {
@@ -80,7 +76,7 @@ const SignUp = () => {
     }, [notification]);
 
     return (
-        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh", padding: 0, mt: "-100px" }}>
+        <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh", padding: 0, mt: "120px" }}>
             <Paper elevation={3} sx={{ p: 4, textAlign: "center", bgcolor: "#F7F2F3", width: "1000px" }}>
                 <Typography variant="h3" sx={{ mb: 3, color: "#00174F" }}>Sign Up</Typography>
                 <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>

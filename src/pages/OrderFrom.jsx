@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { resetCart } from '../features/OrderSlice';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
+import { logOut } from '../features/userSlice';
 
 const schema = Joi.object({
     name: Joi.string().min(2).required().messages({
@@ -43,7 +44,6 @@ const OrderForm = () => {
     const currentUser = useSelector(st => st.user.user);
     const products = useSelector(st => st.cart.arr);
     const totalPrice = products.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [activeStep, setActiveStep] = useState(0);
@@ -53,6 +53,17 @@ const OrderForm = () => {
         resolver: joiResolver(schema),
     });
     const [focus, setFocus] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+    useEffect(() => {
+        // בדוק אם התוקן קיים
+        const token = localStorage.getItem('userToken');
+        if (!token) {
+             dispatch(logOut())
+          // אם התוקן לא קיים, הפנה לעמוד ChekUser
+          navigate('/ChekUser');
+        }
+      }, [navigate]);
 
     useEffect(() => {
         if (currentUser) {
@@ -77,6 +88,8 @@ const OrderForm = () => {
             deliveryDate.setDate(deliveryDate.getDate() + 7); // מוסיף 7 ימים מהתאריך הנוכחי
             const deliveryDateString = deliveryDate.toLocaleDateString('he-IL'); // ממיר את התאריך לפורמט תאריך עברי
 
+            // כאן נעדכן את התאריך `dateEnd` שישמר כמועד הסיום
+            data.dateEnd = deliveryDate; // עדכון התאריך בנתונים
 
             await addOrder(data, currentUser?.token);
             dispatch(resetCart());
@@ -93,6 +106,19 @@ const OrderForm = () => {
             setOpenSnackbar(true);
         }
     };
+
+
+    // Checking if there are any errors in the required fields for the final step
+    useEffect(() => {
+        if (activeStep === 2) {
+            const isError = Object.keys(errors).length > 0;
+            if (isError) {
+                setErrorMessage('Some required fields are missing or incorrect');
+            } else {
+                setErrorMessage('');
+            }
+        }
+    }, [errors, activeStep]);
 
     return (
         <Dialog open={true} onClose={handleClose} fullWidth>
@@ -123,7 +149,10 @@ const OrderForm = () => {
                     </>
                 )}
                 {activeStep === 2 && (
-                    <TextField {...register('notes')} label="Notes for Delivery" fullWidth margin="dense" />
+                    <>
+                        <TextField {...register('notes')} label="Notes for Delivery" fullWidth margin="dense" />
+                        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                    </>
                 )}
 
                 <DialogActions>

@@ -1,56 +1,41 @@
-import { useEffect, useState } from "react";
-import { getAllOrders, updateOrder } from "../api/OrderApi";
-import { CircularProgress, Typography, Pagination, Stack, Button } from "@mui/material";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { getAllOrders, updateOrder } from "../api/OrderApi";
+import { Container, Button, Typography, Paper, CircularProgress, Card, CardContent, CardActions, Collapse, Chip, Grid, Box } from "@mui/material";
 
 const AllOrders = () => {
-    const [allOrders, setAllOrders] = useState([]); // כל ההזמנות
-    const [orders, setOrders] = useState([]); // ההזמנות לעמוד הנוכחי
+    const [allOrders, setAllOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const ordersPerPage = 10; // כמות הזמנות לעמוד
-    const totalPage = Math.ceil(allOrders.length / ordersPerPage); // חישוב דפים
-    const currentUser = useSelector((st) => st.user.user);
+    const [expandedOrder, setExpandedOrder] = useState(null);
+    const currentUser = useSelector((state) => state.user.user);
 
-    // קריאה לכל ההזמנות ושמירתן במשתנה אחד
     const fetchOrders = async () => {
         try {
-            console.log("Fetching all orders...");
-            const response = await getAllOrders(1, 1000, currentUser.token); // מביא את כל ההזמנות
-            console.log("Orders received:", response.data);
+            const response = await getAllOrders(1, 1000, currentUser.token);
             setAllOrders(response.data);
         } catch (err) {
             console.error("Error fetching orders:", err);
-            setError("Error fetching orders!");
         } finally {
             setLoading(false);
         }
     };
 
-    // עדכון ההזמנות לפי עמוד נוכחי
-    useEffect(() => {
-        const startIndex = (currentPage - 1) * ordersPerPage;
-        const endIndex = startIndex + ordersPerPage;
-        setOrders(allOrders.slice(startIndex, endIndex));
-    }, [currentPage, allOrders]);
-
-    // טעינת כל ההזמנות בפעם הראשונה
     useEffect(() => {
         fetchOrders();
     }, []);
 
-    // עדכון סטטוס ההזמנה
     const handleStatusUpdate = async (orderId, newStatus) => {
         try {
-            console.log(`Updating order ${orderId} to ${newStatus ? "Sent" : "Not Sent"}`);
             const updatedOrder = { isSend: newStatus };
             await updateOrder(orderId, updatedOrder, currentUser.token);
-            fetchOrders(); // רענון הנתונים
+            fetchOrders();
         } catch (err) {
             console.error("Error updating status:", err);
-            setError("Error updating status!");
         }
+    };
+
+    const handleExpandClick = (orderId) => {
+        setExpandedOrder(expandedOrder === orderId ? null : orderId);
     };
 
     if (loading) {
@@ -58,77 +43,70 @@ const AllOrders = () => {
     }
 
     return (
-        <div>
-            <Typography variant="h4" gutterBottom>
+        <Container sx={{ mt: 4 }}>
+            <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold", color: "#00174F" }}>
                 All Orders
             </Typography>
 
-            {error && <Typography color="error">{error}</Typography>}
+            <Grid container spacing={3}>
+                {allOrders.map((order) => (
+                    <Grid item xs={12} md={6} lg={4} key={order._id}>
+                        <Card sx={{ backgroundColor: "#FFFFFF", borderRadius: "12px", boxShadow: 3 }}>
+                            <CardContent>
+                                <Typography variant="h6" sx={{ color: "#00174F", fontWeight: "bold" }}>
+                                    Order ID: {order._id}
+                                </Typography>
+                                <Typography variant="body1">User ID: {order.userId}</Typography>
+                                <Typography variant="body1">Address: {order.address}</Typography>
+                                <Typography variant="body2">Order Date: {new Date(order.date).toLocaleString()}</Typography>
+                                <Typography variant="body2">End Date: {new Date(order.dateEnd).toLocaleString()}</Typography>
+                                <Chip
+                                    label={order.isSend ? "Sent" : "Not Sent"}
+                                    color={order.isSend ? "success" : "error"}
+                                    sx={{ mt: 1 }}
+                                />
+                            </CardContent>
 
-            <ul>
-                {orders.map((order) => (
-                    <li key={order._id} style={{ border: "1px solid #ddd", padding: "10px", marginBottom: "10px" }}>
-                        <Typography variant="h6">Order ID: {order._id}</Typography>
-                        <Typography><strong>UserId:</strong> {order.userId}</Typography>
-                        <Typography><strong>Address:</strong> {order.address}</Typography>
-                        <Typography><strong>Order Date:</strong> {new Date(order.date).toLocaleString()}</Typography>
-                        <Typography><strong>End Date:</strong> {new Date(order.dateEnd).toLocaleString()}</Typography>
-                        <Typography><strong>Status:</strong> {order.isSend ? 'Sent' : 'Not Sent'}</Typography>
+                            <CardActions>
+                                <Button
+                                    variant="contained"
+                                    color={order.isSend ? "secondary" : "primary"}
+                                    onClick={() => handleStatusUpdate(order._id, !order.isSend)}
+                                    sx={{
+                                        backgroundColor: order.isSend ? "#D81633" : "#00174F",
+                                        "&:hover": { backgroundColor: order.isSend ? "#F44336" : "#003366" },
+                                    }}
+                                >
+                                    {order.isSend ? "Mark as Not Sent" : "Mark as Sent"}
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    sx={{ color: "#00174F", borderColor: "#00174F", "&:hover": { backgroundColor: "#00174F", color: "#fff" } }}
+                                    onClick={() => handleExpandClick(order._id)}
+                                >
+                                    {expandedOrder === order._id ? "Hide Products" : "Show Products"}
+                                </Button>
+                            </CardActions>
 
-
-                        {/* הצגת המוצרים בהזמנה */}
-                        <Typography variant="h6">Products:</Typography>
-                        <ul>
-                            {order.products.map((item, index) => (
-                                <li key={index} style={{ marginBottom: "5px" }}>
-                                    <Typography><strong>Product ID:</strong> {item._id}</Typography>
-                                    <Typography><strong>Quantity:</strong> {item.count + 1}</Typography>
-                                </li>
-                            ))}
-                        </ul>
-
-                        <Button
-                            variant="contained"
-                            color={order.isSend ? "secondary" : "primary"}
-                            onClick={() => handleStatusUpdate(order._id, !order.isSend)}
-                        >
-                            {order.isSend ? 'Mark as Not Sent' : 'Mark as Sent'}
-                        </Button>
-                    </li>
+                            <Collapse in={expandedOrder === order._id}>
+                                <Box sx={{ p: 2, backgroundColor: "#F5F5F5", borderRadius: "0 0 12px 12px" }}>
+                                    <Typography variant="h6" sx={{ color: "#00174F", fontWeight: "bold" }}>
+                                        Products:
+                                    </Typography>
+                                    {order.products.map((product, index) => (
+                                        <Box key={index} sx={{ p: 1, borderBottom: "1px solid #ddd" }}>
+                                            <Typography>Id: {product._id}</Typography>
+                                            <Typography>Quantity: {product.count+1}</Typography>
+                                            
+                                        </Box>
+                                    ))}
+                                </Box>
+                            </Collapse>
+                        </Card>
+                    </Grid>
                 ))}
-            </ul>
-
-
-            <Stack spacing={2} alignItems="center" sx={{ mt: 3 }}>
-                <Pagination
-                    count={totalPage || 1}
-                    page={currentPage}
-                    onChange={(event, value) => setCurrentPage(value)}
-                    color="primary"
-                    size="large"
-                    shape="rounded"
-                    siblingCount={1}
-                    boundaryCount={1}
-                    sx={{
-                        '.MuiPaginationItem-root': {
-                            backgroundColor: '#00174F',
-                            color: '#fff',
-                            borderRadius: '50%',
-                            '&:hover': {
-                                backgroundColor: '#D81633',
-                            },
-                        },
-                        '.Mui-selected': {
-                            backgroundColor: '#D81633',
-                            color: '#fff',
-                        },
-                        '.MuiPaginationItem-ellipsis': {
-                            color: '#00174F',
-                        },
-                    }}
-                />
-            </Stack>
-        </div>
+            </Grid>
+        </Container>
     );
 };
 

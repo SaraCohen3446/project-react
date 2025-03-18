@@ -22,20 +22,19 @@ function App() {
   return (
     <>
       <NavBar />
-      <div style={{ marginTop: '160px' }}> {/*navbar הוספת רווח מתח ל */}
-        <Routes>
-          <Route path="/FormProduct" element={<ProtectedRoute><FormProduct /></ProtectedRoute>} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/signUp" element={<SignUp />} />
-          <Route path="/ChekUser" element={<ChekUser />} /> {/* עדכון לנתיב החדש */}
-          <Route path="/orderForm" element={<OrderForm />} />
-          <Route path='/AllOrders' element={<AllOrders />} />
-          <Route path='/OrderByUser' element={<OrderByUser />} />
-          <Route path="/" element={<List />} />
-          <Route path="/details/:id" element={<ShowDetalis />} /> {/* שים את זה בנפרד */}
-        </Routes >
-      </div>
+      <Routes>
+        <Route path="/FormProduct" element={<ProtectedRoute><FormProduct /></ProtectedRoute>} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/ChekUser" element={<ChekUser />} /> {/* עדכון לנתיב החדש */}
+        <Route path="/orderForm" element={<OrderForm />} />
+        <Route path='/AllOrders' element={<AllOrders />} />
+        <Route path='/OrderByUser' element={<OrderByUser />} />
+        <Route path="/" element={<List />} />
+        <Route path="/details/:id" element={<ShowDetalis />} /> {/* שים את זה בנפרד */}
+      </Routes >
+
     </>
   );
 }

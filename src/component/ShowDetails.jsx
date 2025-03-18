@@ -1,21 +1,30 @@
-import { Button, Modal, Typography, Box, CardMedia } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addItem } from "../features/OrderSlice";
+import { Box, Typography, Button, IconButton, FormControl, InputLabel, Select, MenuItem, Modal } from '@mui/material';
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { getById } from "../api/ProductApi";
+import MinCart from "./MinCart";
 import forShowDetiles from '../assets/forShowDetiles.png';
 
-export const ShowDetails = () => {
+
+
+const ShowDetails = () => {
     let { id } = useParams();
     let navigate = useNavigate();
     const [item, setItem] = useState({});
-    const [modalOpen, setModalOpen] = useState(true);
+    const [cartPopupOpen, setCartPopupOpen] = useState(false);
+    const [color, setColor] = useState('');
+    const [size, setSize] = useState('');
+    const [quantity, setQuantity] = useState(1);
+    const [modalOpen, setModalOpen] = useState(true); // For modal state
+    const dispatch = useDispatch();
 
     async function fetchProductById(id) {
         try {
             let res = await getById(id);
             setItem(res.data);
-            console.log(res.data);
         } catch (err) {
             console.log(err);
         }
@@ -25,69 +34,141 @@ export const ShowDetails = () => {
         fetchProductById(id);
     }, [id]);
 
-    const handleClose = () => {
+    const handleAddToCart = (event) => {
+        event.preventDefault();
+        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, img: item.img, quantity }));
+        setCartPopupOpen(true);
+        setTimeout(() => {
+            setCartPopupOpen(false);
+        }, 1800);
+    };
+
+    const handleCloseModal = () => {
         setModalOpen(false);
         navigate("/");
     };
 
     return (
-        <Modal open={modalOpen} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
+        <Modal open={modalOpen} onClose={handleCloseModal}>
+                    {/* <img src={forShowDetiles} alt="Cart Logo" style={{ width: '100%' }} /> */}
+            
             <Box sx={{
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+                flexDirection: 'row',
                 justifyContent: 'center',
+                padding: 4,
                 backgroundColor: 'white',
-                padding: '20px',
-                outline: 'none',
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
+                width: '80%',
+                maxWidth: '1000px',
+                minHeight: '600px',
                 boxShadow: 3,
                 borderRadius: '8px',
-                width: '600px',
-                minHeight: '500px', // מוסיף גובה כדי שהמסגרת תיראה גם למעלה ולמטה
-                border: '10px solid #00174F', // מסגרת מכל הכיוונים
-                boxSizing: 'border-box', // מוודא שהמסגרת נספרת כחלק מהגודל
-                position: 'relative'
+                border: '1px solid #ddd',
+                position: 'relative',
+                boxSizing: 'border-box',
+                margin: 'auto'
             }}>
-                {/* לוגו על כל הרוחב */}
-                <Box sx={{ width: '100%', textAlign: 'center', mb: 2 }}>
-                    <img src={forShowDetiles} alt="Cart Logo" style={{ width: '100%' }} />
+
+                {/* Product Image */}
+                <Box sx={{ width: '40%', marginRight: 4 }}>
+                    <img
+                        src={`../src/assets/${item.img}`}
+                        alt={item.name}
+                        style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                    />
                 </Box>
 
-                {/* כפתור סגירה בצבע #00174F */}
-                <Button onClick={handleClose} sx={{ position: 'absolute', top: '10px', right: '10px', color: '#00174F' }}>
-                    <CloseIcon />
-                </Button>
-
-                {/* תמונת המוצר */}
-                <CardMedia
-                    component="img"
-                    height="300"
-                    image={`../src/assets/${item.img}`}
-                    alt={item.name}
-                    sx={{ width: '100%', objectFit: 'cover', borderRadius: '8px' }}
-                />
-
-                {/* פרטי המוצר */}
-                <Box sx={{ width: '100%', mt: 2, textAlign: 'center' }}>
-                    <Typography variant="h5" component="div" gutterBottom>
-                        {item.name}
+                {/* Product Details */}
+                <Box sx={{ width: '60%' }}>
+                    <Typography variant="h6" color="text.secondary" sx={{ marginBottom: 1 }}>
+                        {item.category} {/* Category */}
                     </Typography>
-                    <Typography variant="body1" color="text.secondary" paragraph>
-                        {item.description}
+                    <Typography variant="h4" sx={{ marginBottom: 2 }}>
+                        {item.name} {/* Product Name */}
                     </Typography>
-                    <Typography variant="h6"> ${item.price}</Typography>
-                    <Typography variant="h7">{item.category}</Typography>
-                    <Typography variant="h8">{item.date}</Typography>
-                    <Typography variant="h6" color="text.secondary">{item.additionalDetails}</Typography>
+                    <Typography variant="h6" color="text.primary" sx={{ marginBottom: 2 }}>
+                        ${item.price} {/* Price */}
+                    </Typography>
+
+                    {/* Color Options */}
+                    <Box sx={{ display: 'flex', gap: 2, marginBottom: 2 }}>
+                        <Typography variant="body1" sx={{ alignSelf: 'center' }}>Choose Color: </Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            {['#000000', '#0033FF', '#D81633', '#FFFFFF'].map((colorValue, index) => (
+                                <Box
+                                    key={index}
+                                    onClick={() => setColor(colorValue)}
+                                    sx={{
+                                        width: 30,
+                                        height: 30,
+                                        borderRadius: '50%',
+                                        backgroundColor: colorValue,
+                                        border: color === colorValue ? '3px solid #00174F' : 'none',
+                                        cursor: 'pointer'
+                                    }} />
+                            ))}
+                        </Box>
+                    </Box>
+
+                    {/* Size Selection */}
+                    <FormControl fullWidth sx={{ marginBottom: 2 }}>
+                        <InputLabel>Size</InputLabel>
+                        <Select
+                            value={size}
+                            onChange={(e) => setSize(e.target.value)}
+                            label="Size"
+                        >
+                            <MenuItem value="S">Small</MenuItem>
+                            <MenuItem value="M">Medium</MenuItem>
+                            <MenuItem value="L">Large</MenuItem>
+                            <MenuItem value="XL">Extra Large</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    {/* Quantity Selector */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
+                        <Typography variant="body1" sx={{ marginRight: 2 }}>Quantity:</Typography>
+                        <Button
+                            variant="outlined"
+                            onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}
+                        >-</Button>
+                        <Typography variant="body1" sx={{ margin: '0 10px' }}>{quantity}</Typography>
+                        <Button
+                            variant="outlined"
+                            onClick={() => setQuantity(quantity + 1)}
+                        >+</Button>
+                    </Box>
+
+                    {/* Add to Cart Button */}
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <IconButton
+                            onClick={handleAddToCart}
+                            sx={{
+                                bgcolor: '#00174F',
+                                color: 'white',
+                                padding: 1,
+                                borderRadius: '50%',
+                                '&:hover': { bgcolor: '#D81633' }
+                            }}
+                        >
+                            <ShoppingCartOutlinedIcon sx={{ fontSize: 28 }} />
+                        </IconButton>
+
+                        {/* Like Button */}
+                        <IconButton
+                            sx={{
+                                marginLeft: 2,
+                                color: 'gray',
+                                '&:hover': { color: 'red' }
+                            }}
+                        >
+                            ❤️
+                        </IconButton>
+                    </Box>
                 </Box>
 
-                <Button variant="contained" color="primary" onClick={handleClose} sx={{ mt: 2, backgroundColor: '#00174F' }}>
-                    Close
-                </Button>
+                {/* Cart Popup */}
+                {cartPopupOpen && <MinCart setCartPopupOpen={setCartPopupOpen} cartPopupOpen={cartPopupOpen} />}
             </Box>
         </Modal>
     );
