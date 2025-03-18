@@ -55,15 +55,6 @@ const OrderForm = () => {
     const [focus, setFocus] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
-    useEffect(() => {
-        // בדוק אם התוקן קיים
-        const token = localStorage.getItem('userToken');
-        if (!token) {
-             dispatch(logOut())
-          // אם התוקן לא קיים, הפנה לעמוד ChekUser
-          navigate('/ChekUser');
-        }
-      }, [navigate]);
 
     useEffect(() => {
         if (currentUser) {

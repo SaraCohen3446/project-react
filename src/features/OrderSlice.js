@@ -52,18 +52,21 @@ const OrderSlice = createSlice({
     },
     // פונקציה להוספת פריט לעגלה
     addItem: (state, action) => {
-      const existingItem = state.arr.find(item => item._id === action.payload._id);
-      console.log(existingItem);
+      const { _id, quantity } = action.payload;
+      const existingItem = state.arr.find(item => item._id === _id);
+
       if (existingItem) {
-        existingItem.qty++;
+        existingItem.qty += quantity; // מוסיפים את הכמות שנבחרה
       } else {
-        state.arr.push({ ...action.payload, qty: 1 });
+        state.arr.push({ ...action.payload, qty: quantity }); // שומרים את הכמות מההתחלה
       }
+
       state.count = state.arr.reduce((total, item) => total + item.qty, 0);
       state.sum = state.arr.reduce((total, item) => total + (item.price * item.qty), 0);
       saveCartToLocalStorage(state);
     }
-    
+
+
   }
 });
 
