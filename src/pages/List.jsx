@@ -29,13 +29,12 @@ const List = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await getAllProducts(currentPage, 28);
-            setArr(response.data);
-            setFilteredArr(response.data);
-            setLoading(false);
+            const response = await getAllProducts(currentPage, 28); // קריאה ל-API
+            setArr(response.data); // שמירת המוצרים במצב
+            setLoading(false); // עצירת טעינה
         } catch (err) {
-            setError("Error fetching products!");
-            setLoading(false);
+            setError("Error fetching products!"); // טיפול בשגיאות
+            setLoading(false); // עצירת טעינה
         }
     };
 
@@ -43,7 +42,7 @@ const List = () => {
 
     const fetchTotalPages = async () => {
         try {
-            const response = await totalPages(4);
+            const response = await totalPages(28);
             setTotalPage(response.data);
         } catch (err) {
             console.error("Error fetching total pages:", err);
@@ -129,7 +128,7 @@ const List = () => {
 
                     {/* אם יש תוצאות, מציגים את המוצרים */}
                     {filteredArr.length > 0 && (
-                        <ul style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px', listStyleType: 'none', padding: 0 }}>
+                        <ul style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '38px', listStyleType: 'none', padding: 0 }}>
                             {filteredArr.map(item => (
                                 <li key={item._id} style={{ flex: '1 1 250px', maxWidth: '300px' }}>
                                     <OneProduct item={item} onDelete={deleteProductFromArr} />
@@ -142,14 +141,14 @@ const List = () => {
 
             <Stack spacing={2} alignItems="center" sx={{ mt: 3 }}>
                 <Pagination
-                    count={totalPage || 1}
+                    count={totalPage }
                     page={currentPage}
                     onChange={(event, value) => setCurrentPage(value)}
                     color="primary"
                     size="large"
                     shape="rounded"
                     siblingCount={0}
-                    boundaryCount={1}
+                    boundaryCount={0}
                     sx={{
                         '.MuiPaginationItem-root': {
                             backgroundColor: '#00174F',

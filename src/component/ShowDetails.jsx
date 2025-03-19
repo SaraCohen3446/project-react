@@ -33,7 +33,7 @@ const ShowDetails = () => {
 
     const handleAddToCart = (event) => {
         event.preventDefault();
-        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, img: item.img, quantity: 1 }));
+        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, img: item.img, quantity:quantity }));
         setCartPopupOpen(true);
         setTimeout(() => {
             setCartPopupOpen(false);
