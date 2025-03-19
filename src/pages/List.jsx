@@ -29,7 +29,7 @@ const List = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await getAllProducts(currentPage, 4);
+            const response = await getAllProducts(currentPage, 28);
             setArr(response.data);
             setFilteredArr(response.data);
             setLoading(false);
@@ -93,7 +93,7 @@ const List = () => {
 
     return (
         <>
-            <img src={wellaper1} alt="" style={{ width: "1448px", height: "800px", marginTop: 140 }} />
+            <img src={wellaper1} alt="" style={{ width: "1440px", height: "800px", marginTop: 150 }} />
             <NavBar setFilters={setFilters} />
             <Box display="flex" alignItems="center" sx={{ mb: 2, width: "100%", justifyContent: "flex-start" }}>
                 <CustomFilterMenu filters={filters} setFilters={setFilters} products={arr} />

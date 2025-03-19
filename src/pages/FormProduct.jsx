@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { addProduct, update } from "../api/ProductApi";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { TextField, Button, Typography, Container } from "@mui/material";
+import { TextField, Button, Typography, Container, Snackbar, Alert, Grid } from "@mui/material";
 import { useSelector } from "react-redux";
 
 const FormProduct = () => {
@@ -13,25 +13,26 @@ const FormProduct = () => {
     const currentUser = useSelector(state => state.user.user);
     const navigate = useNavigate();
 
+    const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
     const save = async (data) => {
         try {
             if (!data.img || imagePreview !== item?.img) {
                 data.img = imagePreview;
             }
 
-            let res;
             if (!item) {
-                res = await addProduct(data, currentUser?.token);
-                alert("Add successful");
+                await addProduct(data, currentUser?.token);
+                setSnackbar({ open: true, message: "Product added successfully!", severity: "success" });
             } else {
-                res = await update(item._id, data, currentUser?.token);
-                alert("Edit successful");
+                await update(item._id, data, currentUser?.token);
+                setSnackbar({ open: true, message: "Product edited successfully!", severity: "success" });
             }
 
             reset();
-            setImagePreview(""); // reset image preview
+            setImagePreview("");
         } catch (err) {
-            alert("Problem with product\n" + err.message);
+            setSnackbar({ open: true, message: "Problem with product: " + err.message, severity: "error" });
             console.log(err);
         }
     };
@@ -60,7 +61,19 @@ const FormProduct = () => {
     };
 
     return (
-        <Container sx={{ maxWidth: "sm", paddingTop: 4, backgroundColor: "#F7F2F3", borderRadius: 2, display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column", border: "2px solid #00174F" }}>
+        <Container sx={{
+            width: "50%", // או כל אחוז שמתאים לך
+            paddingBottom: 3,
+            marginTop: 15,
+            paddingTop: 2,
+            backgroundColor: "#F7F2F3",
+            borderRadius: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            border: "2px solid #00174F"
+        }}>
             <Typography variant="h4" sx={{ color: "#00174F", marginBottom: 4, textAlign: "center" }}>
                 {item ? "Edit product" : "Add product"}
             </Typography>
@@ -82,9 +95,26 @@ const FormProduct = () => {
                 <TextField label="Category" variant="outlined" fullWidth sx={{ marginBottom: 2 }} {...register("category")} />
                 <TextField label="Ingredient" variant="outlined" fullWidth sx={{ marginBottom: 2 }} {...register("ingredient")} placeholder="פרט מרכיבים, מופרדים בפסיקים" />
 
-                <Button type="submit" variant="outlined" fullWidth sx={{ color: "#fff", backgroundColor: "#00174F", borderColor: "#00174F", '&:hover': { backgroundColor: "#D81633", borderColor: "#D81633" } }}>{item ? "Edit product" : "Add product"}</Button>
-                <Button onClick={() => navigate(-1)} variant="outlined" fullWidth sx={{ color: "#fff", backgroundColor: "#D81633", borderColor: "#D81633", mt: 2, '&:hover': { backgroundColor: "#00174F", borderColor: "#00174F" } }}>Cancel</Button>
+                <Grid container spacing={2} sx={{ marginTop: 0 }}>
+                    <Grid item xs={6}>
+                        <Button onClick={() => navigate(-1)} variant="contained" fullWidth sx={{ color: "#fff", backgroundColor: "#D81633" }}>
+                            Cancel
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Button type="submit" variant="contained" fullWidth sx={{ color: "#fff", backgroundColor: "#00174F" }}>
+                            {item ? "Edit product" : "Add product"}
+                        </Button>
+                    </Grid>
+                </Grid>
             </form>
+
+            {/* Snackbar Alert */}
+            <Snackbar open={snackbar.open} autoHideDuration={3000} onClose={() => setSnackbar({ ...snackbar, open: false })} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: "100%" }}>
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };

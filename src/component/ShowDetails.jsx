@@ -42,7 +42,7 @@ const ShowDetails = () => {
 
     const handleCloseModal = () => {
         setModalOpen(false);
-        navigate("/");
+        navigate(-1);
     };
 
     return (
@@ -80,11 +80,11 @@ const ShowDetails = () => {
                 }}></Box>
 
                 {/* Product Image */}
-                <Box sx={{ width: '40%', marginLeft: 10, marginTop: 20 }}>
+                <Box sx={{ width: '40%', marginLeft: 3, marginTop: 15}}>
                     <img
                         src={`../src/assets/${item.img}`}
                         alt={item.name}
-                        style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
+                        style={{ width: '400px', height: "400px", objectFit: 'cover' }}
                     />
                 </Box>
 
@@ -191,7 +191,7 @@ const ShowDetails = () => {
                             gap: 1,
                             position: 'absolute',
                             right: 63, // מזיז יותר ימינה
-                            bottom: "18%" // מוריד את הכפתור למטה
+                            bottom: "65px" // מוריד את הכפתור למטה
                         }}
                     >
                         <ShoppingCartOutlinedIcon sx={{ fontSize: 30 }} />
