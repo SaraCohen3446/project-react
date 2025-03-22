@@ -116,7 +116,7 @@ const AllOrders = () => {
                                             {order.products.map((product, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell sx={{ fontWeight: "bold" }}>ID :  {product._id}</TableCell>
-                                                    <TableCell sx={{ fontWeight: "bold" }}>Quantity :  {product.count + 1}</TableCell>
+                                                    <TableCell sx={{ fontWeight: "bold" }}>Quantity :  {product.count }</TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>

@@ -51,12 +51,10 @@ const LogIn = () => {
     };
 
     return (
-        // <Container sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "80vh", padding: 0, }}>
 
         <Container sx={{ top: "0px", padding: 0, minHeight: "100vh", mt: "230px" }}>
-            {/* עטיפה של העמוד ב-Paper עם רקע וסטייל */}
             <Paper elevation={3} sx={{ p: 4, textAlign: "center", bgcolor: "#F7F2F3" }}>
-                <Typography variant="h3" sx={{ mb: 3, color: "#00174F" }}>Login</Typography> {/* כותרת העמוד */}
+                <Typography variant="h3" sx={{ mb: 3, color: "#00174F" }}>Login</Typography>
                 {/* טופס התחברות */}
                 <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                     {/* שדה למייל */}

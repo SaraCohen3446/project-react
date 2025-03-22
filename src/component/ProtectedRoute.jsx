@@ -8,6 +8,7 @@ const ProtectedRoute = ({children}) => {
     if(!user||user?.role=="USER")
         return <Navigate to="/ChekUser"/>
     return children;
+    
 }
  
 export default ProtectedRoute;

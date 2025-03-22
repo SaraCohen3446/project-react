@@ -33,7 +33,7 @@ const ShowDetails = () => {
 
     const handleAddToCart = (event) => {
         event.preventDefault();
-        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, img: item.img, quantity:quantity }));
+        dispatch(addItem({ _id: item._id, name: item.name, price: item.price, img: item.img, quantity: quantity }));
         setCartPopupOpen(true);
         setTimeout(() => {
             setCartPopupOpen(false);
@@ -46,7 +46,7 @@ const ShowDetails = () => {
     };
 
     return (
-        <Modal open={modalOpen} onClose={handleCloseModal}>
+        <Modal sx={{ zIndex: 1100 }} open={modalOpen} onClose={handleCloseModal}>
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -62,8 +62,7 @@ const ShowDetails = () => {
                 position: 'relative',
                 boxSizing: 'border-box',
                 margin: 'auto',
-                marginTop: '80px',
-                zIndex: 1300
+                marginTop: '80px'
             }}>
 
                 <Box sx={{
@@ -80,7 +79,7 @@ const ShowDetails = () => {
                 }}></Box>
 
                 {/* Product Image */}
-                <Box sx={{ width: '40%', marginLeft: 3, marginTop: 15}}>
+                <Box sx={{ width: '40%', marginLeft: 3, marginTop: 15 }}>
                     <img
                         src={`../src/assets/${item.img}`}
                         alt={item.name}
@@ -200,8 +199,10 @@ const ShowDetails = () => {
 
                 {/* Cart Popup Above Modal */}
                 {cartPopupOpen && <MinCart setCartPopupOpen={setCartPopupOpen} cartPopupOpen={cartPopupOpen} />}
+
             </Box>
         </Modal >
+
     );
 };
 

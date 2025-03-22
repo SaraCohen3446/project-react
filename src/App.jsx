@@ -29,7 +29,7 @@ function App() {
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/ChekUser" element={<ChekUser />} /> {/* עדכון לנתיב החדש */}
         <Route path="/orderForm" element={<OrderForm />} />
-        <Route path='/AllOrders' element={<AllOrders />} />
+        <Route path='/AllOrders' element={<ProtectedRoute><AllOrders /></ProtectedRoute>} />
         <Route path='/OrderByUser' element={<OrderByUser />} />
         <Route path="/" element={<List />} />
         <Route path="/details/:id" element={<ShowDetalis />} /> {/* שים את זה בנפרד */}

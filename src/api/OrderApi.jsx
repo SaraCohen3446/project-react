@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const baseUrl = "http://localhost:4000/api/order";
+const baseUrl = "https://project-node-qrx7.onrender.com/api/order";
 
 export const getAllOrders = (pageNum, limit, token) => {
     return axios.get(`${baseUrl}/?page=${pageNum}&limit=${limit}`, {

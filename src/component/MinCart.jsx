@@ -28,13 +28,13 @@ const MinCart = ({ setCartPopupOpen, cartPopupOpen }) => {
 
             </Box>
 
-            <Divider sx={{ margin: '10px 0' }} />
+            <Divider sx={{ margin: '10px ' }} />
             <List>
                 {cart.map((cartItem) => {
                     const imageUrl = cartItem.img; // ודא שהמשתנה מוגדר כאן
 
                     return (
-                        <ListItem key={cartItem._id} sx={{ padding: '15px 0', display: 'flex', alignItems: 'center' }}>
+                        <ListItem key={cartItem._id} sx={{ padding: '15px ', display: 'flex', alignItems: 'center' }}>
                             <ListItemText
                                 primary={cartItem.name}
                                 secondary={
@@ -43,15 +43,15 @@ const MinCart = ({ setCartPopupOpen, cartPopupOpen }) => {
                                             Quantity: {cartItem.qty}
                                         </Typography>
                                         <Typography variant="body2" color="textSecondary">
-                                            Price: ${cartItem.price.toFixed(2)}
+                                            Price: ${cartItem.price?.toFixed(2)}
                                         </Typography>
                                     </>
                                 }
                             />
                             <ListItemSecondaryAction>
-                            <img src={`../src/assets/${cartItem.img}`} alt={cartItem.name} style={{ maxWidth: '60px', borderRadius: '4px', marginLeft: '10px' }} />
+                                <img src={`../src/assets/${cartItem.img}`} alt={cartItem.name} style={{ maxWidth: '60px', borderRadius: '4px', marginLeft: '10px' }} />
 
-                                
+
                             </ListItemSecondaryAction>
                         </ListItem>
                     );
@@ -60,7 +60,7 @@ const MinCart = ({ setCartPopupOpen, cartPopupOpen }) => {
 
             <Divider sx={{ marginTop: '20px', marginBottom: '20px' }} />
             <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                Total: ${cart.reduce((total, item) => total + (item.price * item.qty), 0).toFixed(2)}
+                Total: ${cart.reduce((total, item) => total + ((item.price || 0) * (item.qty || 0)), 0).toFixed(2)}
             </Typography>
         </Drawer>
     );

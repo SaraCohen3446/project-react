@@ -38,7 +38,7 @@ const schema = Joi.object({
     notes: Joi.string().allow('').optional(),
 });
 
-const steps = ['פרטי אישיים', 'פרטי תשלום', 'השלמת הזמנה'];
+const steps = ["Personal Details", "Payment Details", "Order Completion"];
 
 const OrderForm = () => {
     const currentUser = useSelector(st => st.user.user);
@@ -115,7 +115,10 @@ const OrderForm = () => {
         <Dialog open={true} onClose={handleClose} fullWidth>
             <DialogTitle>Complete Your Order</DialogTitle>
             <DialogContent>
-                <Stepper activeStep={activeStep} alternativeLabel>
+                <Stepper activeStep={activeStep} alternativeLabel sx={{
+                    "& .MuiStepIcon-root": { color: "#00174F" },
+                }}>
+
                     {steps.map((label) => (
                         <Step key={label}>
                             <StepLabel>{label}</StepLabel>
@@ -136,7 +139,7 @@ const OrderForm = () => {
                         <TextField {...register('cardNumber')} label="Card Number" fullWidth margin="dense" error={!!errors.cardNumber} helperText={errors.cardNumber?.message} onFocus={() => setFocus('number')} />
                         <TextField {...register('expiryDate')} label="Expiry Date (MM/YY)" fullWidth margin="dense" error={!!errors.expiryDate} helperText={errors.expiryDate?.message} onFocus={() => setFocus('expiry')} />
                         <TextField {...register('cvv')} label="CVV" fullWidth margin="dense" error={!!errors.cvv} helperText={errors.cvv?.message} onFocus={() => setFocus('cvc')} />
-                        <h3>Total Payment: ${totalPrice.toFixed(2)}</h3>
+                        <h3 style={{color:"#00174F"}}>Total Payment: ${totalPrice.toFixed(2)}</h3>
                     </>
                 )}
                 {activeStep === 2 && (
@@ -147,13 +150,28 @@ const OrderForm = () => {
                 )}
 
                 <DialogActions>
-                    {activeStep > 0 && <Button onClick={handleBack} color="secondary">Back</Button>}
+                    {activeStep > 0 && (
+                        <Button
+                            onClick={handleBack}
+                            sx={{ color: "#D81633" }} >
+                            Back
+                        </Button>
+                    )}
                     {activeStep < steps.length - 1 ? (
-                        <Button onClick={handleNext} color="primary">Next</Button>
+                        <Button
+                            onClick={handleNext}
+                            sx={{ color: "#00174F", }}  >
+                            Next
+                        </Button>
                     ) : (
-                        <Button onClick={handleSubmit(onSubmit)} color="primary">Place Order</Button>
+                        <Button
+                            onClick={handleSubmit(onSubmit)}
+                            sx={{ color: "#00174F", }} >
+                            Place Order
+                        </Button>
                     )}
                 </DialogActions>
+
 
             </DialogContent>
 

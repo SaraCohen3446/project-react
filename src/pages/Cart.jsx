@@ -32,14 +32,21 @@ const Cart = () => {
     // פונקציה שמבצעת את הפעולה כשאין currentUser
     const handleChekUser = () => {
         if (!currentUser) {
-            setChekUserOpen(true);  // פותח את חלון ההזמנה אם אין משתמש
+            setCChekUserOpen(true);  // פותח את חלון ההזמנה אם אין משתמש
         } else {
             navigate("/orderForm")  // אם יש משתמש, מנווט לעמוד פרטי ההזמנה
         }
     };
 
     return (
-        <Container maxWidth={false} sx={{ top: "0px", height: "600px", }}>
+        <Container maxWidth={false} sx={{
+            display: 'flex',               // הפעלת Flexbox
+            flexDirection: 'column',       // סידור התוכן לעמודה
+            alignItems: 'center',          // ממורכז אופקית
+            justifyContent: 'center',      // ממורכז אנכית
+            height: '100vh',               // 100% מהגובה של החלון
+            marginTop: '75px',            // שולי עליון
+        }}>
             <Typography variant="h4" gutterBottom sx={{ color: '#00174F', textAlign: 'center', fontWeight: 'bold' }}>
                 Shopping Cart
             </Typography>
@@ -55,27 +62,30 @@ const Cart = () => {
                         sx={{
                             height: '170px',
                             display: 'flex',
-                            border: '1px solid #00174F ',
-                            width: '700px',
-                            marginBottom: '16px',
+                            border: '1px solid #00174F',
+                            borderRadius: '12px',
+                            width: '750px',
+                            marginBottom: '8px',
                             alignItems: 'center',
                             padding: '1px',
+                            alignSelf: 'center',
+                            position: 'relative', // הוספתי את זה כדי שהתוכן בתחתית יוכל להתמקם
                         }}
                     >
                         <Grid container alignItems="center" spacing={0.2}>
                             <Grid item xs={3}>
                                 <Box sx={{ maxWidth: '100%' }}>
-                                    <img src={`../src/assets/${item.img}`} alt={item.name} style={{ width: '100%', height: '100%', borderRadius: '8px' }} />
+                                    <img src={`../src/assets/${item.img}`} alt={item.name} style={{ width: '160px', height: '160px', borderRadius: '8px' }} />
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={2}>
-                                <Typography sx={{ color: '#00174F', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '2px', width: '100px' }}>
+                            <Grid item xs={3}>
+                                <Typography sx={{ color: '#00174F', fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '2px' }}>
                                     {item.name}
                                 </Typography>
                             </Grid>
 
-                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center', width: "15px" }}>
+                            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'center' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid rgb(113, 115, 120)', borderRadius: '15px', width: '80px', justifyContent: 'space-between', padding: '2px' }}>
                                     <IconButton onClick={() => handleReduce(item._id)} sx={{ color: '#00174F', padding: '2px' }}>
                                         <RemoveIcon fontSize="small" />
@@ -89,24 +99,24 @@ const Cart = () => {
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={2}>
-                                <IconButton onClick={() => handleRemove(item._id)} sx={{ color: '#D81633' }}>
+                            <Grid item xs={1} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <IconButton onClick={() => handleRemove(item._id)} sx={{ color: '#808080' }}>
                                     <Delete />
                                 </IconButton>
                             </Grid>
-
-                            <Grid item xs={2.5} sx={{ textAlign: 'right', position: 'relative', paddingBottom: '10px' }}>
-                                <Box sx={{ position: 'absolute', bottom: '-10px', right: 0 }}>
-                                    <Typography sx={{ fontWeight: 'bold', color: '#00174F', fontSize: '0.9rem', marginTop: '5px' }}>
-                                        {item.qty} x ${item.price.toFixed(2)} {/* כמות x מחיר פר יחידה */}
-                                    </Typography>
-                                    <Typography sx={{ fontWeight: 'bold', color: '#00174F', fontSize: '1.2rem' }}>
-                                        ${(item.price * item.qty).toFixed(2)} {/* מחיר כולל כפול כמות */}
-                                    </Typography>
-                                </Box>
-                            </Grid>
                         </Grid>
+
+                        {/* תצוגת המחיר מתחת לכל המידע של המוצר */}
+                        <Box sx={{ position: 'absolute', bottom: '55px', right: '48px' }}>
+                            <Typography sx={{ fontWeight: 'bold', color: '#808080', fontSize: '0.9rem' }}>
+                                {item.qty} x {item.price.toFixed(2)}
+                            </Typography>
+                            <Typography sx={{ fontWeight: 'bold', color: '#00174F', fontSize: '1.3rem' }}>
+                                ${(item.price * item.qty).toFixed(2)}
+                            </Typography>
+                        </Box>
                     </Paper>
+
                 ))
             )}
             <Divider sx={{ my: 3 }} />
@@ -116,7 +126,14 @@ const Cart = () => {
 
             <div>
                 {cart.length > 0 && (
-                    <Button onClick={handleChekUser} sx={{ backgroundColor: '#00174F', color: 'white', padding: '10px 20px', borderRadius: '4px' }}>
+                    <Button onClick={handleChekUser} sx={{
+                        backgroundColor: "#F7F2F3", color: '#00174F', padding: '10px 20px', borderRadius: '4px', border: "2px solid #00174F",
+                        '&:hover': {
+                            backgroundColor: "#F7F2F3",
+                            color: '#00174F',
+                            border: "2px solid #00174F"
+                        }
+                    }}>
                         Finish Order
                     </Button>
                 )}
