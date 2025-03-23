@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/userSlice.js"; // ייבוא פעולה שמבצע את ההתחברות
-import { Container, TextField, Button, Typography, Box, CircularProgress, Alert, Paper, InputAdornment, IconButton } from "@mui/material"; // ייבוא רכיבי MUI
-import { Visibility, VisibilityOff } from "@mui/icons-material"; // ייבוא אייקוני עין
+import { Container, TextField, Button, Typography, Box, CircularProgress, Alert, Paper, InputAdornment, IconButton } from "@mui/material"; 
+import { Visibility, VisibilityOff } from "@mui/icons-material"; 
 import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
@@ -20,7 +20,6 @@ const LogIn = () => {
         dispatch(loginUser({ email, password })); // שולח את המייל והסיסמה ל-Redux
     };
 
-
     useEffect(() => {
         error &&
             setNotification({ type: "error", message: error.message }); // אם יש שגיאה, מציג את ההודעה המתאימה
@@ -30,7 +29,7 @@ const LogIn = () => {
         if (user) {
             setNotification({ type: "success", message: `Welcome ${user.userName}!` });
             const timer = setTimeout(() => {
-                navigate("/");
+                navigate("/"); // מנווט לדף הבית אחרי הצלחה
             }, 1000);
         }
     }, [user]);
@@ -51,7 +50,6 @@ const LogIn = () => {
     };
 
     return (
-
         <Container sx={{ top: "0px", padding: 0, minHeight: "100vh", mt: "230px" }}>
             <Paper elevation={3} sx={{ p: 4, textAlign: "center", bgcolor: "#F7F2F3" }}>
                 <Typography variant="h3" sx={{ mb: 3, color: "#00174F" }}>Login</Typography>

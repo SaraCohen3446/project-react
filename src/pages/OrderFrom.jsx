@@ -9,8 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import { resetCart } from '../features/OrderSlice';
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
-import { logOut } from '../features/userSlice';
 
+
+//תקינות לשדות עם joi
 const schema = Joi.object({
     name: Joi.string().min(2).required().messages({
         'string.min': 'שם חייב להיות לפחות 2 תווים',
@@ -70,21 +71,31 @@ const OrderForm = () => {
     const handleNext = () => setActiveStep((prevStep) => prevStep + 1);
     const handleBack = () => setActiveStep((prevStep) => prevStep - 1);
 
+
     const onSubmit = async (data) => {
         try {
-            data.products = products;
+            data.products = products.map(item => ({
+                product: item,
+                count: item.quantity,
+            }));
+
+            // הוספת ה-userId 
             data.userId = currentUser._id;
 
+            // עדכון תאריך הגעת ההזמנה
             const deliveryDate = new Date();
             deliveryDate.setDate(deliveryDate.getDate() + 7); // מוסיף 7 ימים מהתאריך הנוכחי
             const deliveryDateString = deliveryDate.toLocaleDateString('he-IL'); // ממיר את התאריך לפורמט תאריך עברי
 
-            // כאן נעדכן את התאריך `dateEnd` שישמר כמועד הסיום
             data.dateEnd = deliveryDate; // עדכון התאריך בנתונים
 
+            // שליחה לשרת
             await addOrder(data, currentUser?.token);
+
+            // ריסט לארגז הקניות אחרי השליחה
             dispatch(resetCart());
 
+            // הצגת הודעה על הצלחה
             setSnackbarMessage(`Your order has been successfully placed! It will arrive on: ${deliveryDateString} at: ${data.address}`);
             setOpenSnackbar(true);
 
@@ -99,7 +110,7 @@ const OrderForm = () => {
     };
 
 
-    // Checking if there are any errors in the required fields for the final step
+    // בדיקה אם יש איזה שדה ריק /לא תקין ועדכון ע"כ בצעד האחרון
     useEffect(() => {
         if (activeStep === 2) {
             const isError = Object.keys(errors).length > 0;
@@ -115,9 +126,7 @@ const OrderForm = () => {
         <Dialog open={true} onClose={handleClose} fullWidth>
             <DialogTitle>Complete Your Order</DialogTitle>
             <DialogContent>
-                <Stepper activeStep={activeStep} alternativeLabel sx={{
-                    "& .MuiStepIcon-root": { color: "#00174F" },
-                }}>
+                <Stepper activeStep={activeStep} alternativeLabel sx={{ "& .MuiStepIcon-root": { color: "#00174F" }, }}>
 
                     {steps.map((label) => (
                         <Step key={label}>
@@ -139,7 +148,7 @@ const OrderForm = () => {
                         <TextField {...register('cardNumber')} label="Card Number" fullWidth margin="dense" error={!!errors.cardNumber} helperText={errors.cardNumber?.message} onFocus={() => setFocus('number')} />
                         <TextField {...register('expiryDate')} label="Expiry Date (MM/YY)" fullWidth margin="dense" error={!!errors.expiryDate} helperText={errors.expiryDate?.message} onFocus={() => setFocus('expiry')} />
                         <TextField {...register('cvv')} label="CVV" fullWidth margin="dense" error={!!errors.cvv} helperText={errors.cvv?.message} onFocus={() => setFocus('cvc')} />
-                        <h3 style={{color:"#00174F"}}>Total Payment: ${totalPrice.toFixed(2)}</h3>
+                        <h3 style={{ color: "#00174F" }}>Total Payment: ${totalPrice.toFixed(2)}</h3>
                     </>
                 )}
                 {activeStep === 2 && (
@@ -151,36 +160,27 @@ const OrderForm = () => {
 
                 <DialogActions>
                     {activeStep > 0 && (
-                        <Button
-                            onClick={handleBack}
-                            sx={{ color: "#D81633" }} >
+                        <Button onClick={handleBack} sx={{ color: "#D81633" }} >
                             Back
                         </Button>
                     )}
                     {activeStep < steps.length - 1 ? (
-                        <Button
-                            onClick={handleNext}
-                            sx={{ color: "#00174F", }}  >
+                        <Button onClick={handleNext} sx={{ color: "#00174F", }}  >
                             Next
                         </Button>
                     ) : (
-                        <Button
-                            onClick={handleSubmit(onSubmit)}
-                            sx={{ color: "#00174F", }} >
+                        <Button onClick={handleSubmit(onSubmit)} sx={{ color: "#00174F", }} >
                             Place Order
                         </Button>
                     )}
                 </DialogActions>
-
-
             </DialogContent>
 
             <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
                 <Alert severity="success" sx={{ width: '100%' }}>{snackbarMessage}</Alert>
             </Snackbar>
-        </Dialog>
+        </Dialog >
     );
 };
 
 export default OrderForm;
-

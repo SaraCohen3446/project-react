@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../features/userSlice.js";
+import { registerUser } from "../features/userSlice.js"; // ייבוא פעולה שמבצע את הרישום
 import { Container, TextField, Button, Typography, Box, CircularProgress, Alert, Paper, InputAdornment, IconButton } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -11,12 +11,11 @@ const SignUp = () => {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [notification, setNotification] = useState(null);
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
     const { loading, error, user } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    const passwordRegex = /^[A-Za-z\\d]{8,}$/;
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -27,50 +26,29 @@ const SignUp = () => {
             return;
         }
 
-        if (password.length < 8) {
-            setNotification({ type: "error", message: "Password must be at least 8 characters long." });
+        if (password.length < 8 ||
+            !/[A-Z]/.test(password) ||
+            !/[a-z]/.test(password) ||
+            !/[0-9]/.test(password)) {
+            setNotification({ type: "error", message: "Password must be at least 8 characters long and include uppercase, lowercase and a number." });
             return;
         }
 
-        if (!/[A-Z]/.test(password)) {
-            setNotification({ type: "error", message: "Password must include at least one uppercase letter." });
-            return;
-        }
-
-        if (!/[a-z]/.test(password)) {
-            setNotification({ type: "error", message: "Password must include at least one lowercase letter." });
-            return;
-        }
-
-        if (!/[0-9]/.test(password)) {
-            setNotification({ type: "error", message: "Password must include at least one number." });
-            return;
-        }
-        else {
-            dispatch(registerUser({ userName, email, password }));
-        }
-
+        dispatch(registerUser({ userName, email, password }));
     };
-
-    useEffect(() => {
-        error &&
-            setNotification({ type: "error", message: error.message });
-    }, [error]);
 
     useEffect(() => {
         if (user) {
             setNotification({ type: "success", message: `Welcome ${user.userName}!` });
             const timer = setTimeout(() => {
-                navigate("/");
+                navigate("/"); // מנווט לדף הבית אחרי הצלחה
             }, 1000);
         }
     }, [user]);
 
     useEffect(() => {
         if (notification) {
-            const timer = setTimeout(() => {
-                setNotification(null);
-            }, 3000);
+            const timer = setTimeout(() => setNotification(null), 3000);
             return () => clearTimeout(timer);
         }
     }, [notification]);
@@ -100,7 +78,13 @@ const SignUp = () => {
                             ),
                         }}
                     />
-                    <Button type="submit" variant="contained" fullWidth sx={{ bgcolor: "#00174F", color: "white", '&:hover': { bgcolor: "#002B7F" }, py: 1.5, fontSize: "1.2rem" }} disabled={loading}>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        sx={{ bgcolor: "#00174F", color: "white", '&:hover': { bgcolor: "#002B7F" }, py: 1.5, fontSize: "1.2rem" }}
+                        disabled={loading}
+                    >
                         {loading ? <CircularProgress size={24} color="inherit" /> : "Sign Up"}
                     </Button>
                 </Box>

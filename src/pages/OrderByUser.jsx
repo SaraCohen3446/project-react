@@ -91,7 +91,7 @@ const OrderByUser = () => {
 
             <Grid container spacing={3} justifyContent="center">
                 {orders.map((order) => (
-                    <Grid item xs={12} md={10} key={order._id}>
+                    <Grid item xs={12} md={15} key={order._id}>
                         <Card sx={{ padding: 3, boxShadow: 4, borderRadius: '12px', backgroundColor: '#fff', border: '2px solid #00174F' }}>
                             <CardContent>
                                 <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#00174F', fontSize: '20px' }}>ID: {order._id}</Typography>
@@ -172,7 +172,7 @@ const OrderByUser = () => {
 
                                                             {/* Price */}
                                                             <TableCell align="center" style={{ fontSize: '16px' }}>
-                                                                {product ? `${item.count + 1}x${product.price}` : <CircularProgress size={10} />}
+                                                                {product ? `${item.count }x${product.price}` : <CircularProgress size={10} />}
                                                                 <br />
                                                                 <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
                                                                     ${totalPrice}

@@ -37,7 +37,7 @@ const CustomFilterMenu = ({ setFilters, filters, products, setFilteredArr }) => 
             );
         }
 
-       
+
 
         const filters = { ...localFilters, ingredient: ingredient !== "All" ? ingredient : "All" };
         setFilters(filters);
@@ -81,10 +81,10 @@ const CustomFilterMenu = ({ setFilters, filters, products, setFilteredArr }) => 
                     <Typography variant="body2" mt={2}>Price Range</Typography>
                     <Select fullWidth value={localFilters.priceRange} onChange={handleSelectChange('priceRange')}>
                         <MenuItem value="All">All</MenuItem>
-                        <MenuItem value="100-200">\$100 - \$200</MenuItem>
-                        <MenuItem value="200-300">\$200 - \$300</MenuItem>
-                        <MenuItem value="300-400">\$300 - \$400</MenuItem>
-                        <MenuItem value="400-500">\$400 - \$500</MenuItem>
+                        <MenuItem value="100-200">$100 - $200</MenuItem>
+                        <MenuItem value="200-300">$200 - $300</MenuItem>
+                        <MenuItem value="300-400">$300 - $400</MenuItem>
+                        <MenuItem value="400-500">$400 - $500</MenuItem>
                     </Select>
 
                     <Typography variant="body2" mt={2}>Subcategory</Typography>
@@ -92,16 +92,19 @@ const CustomFilterMenu = ({ setFilters, filters, products, setFilteredArr }) => 
                         <MenuItem value="All">All</MenuItem>
                         <MenuItem value="Pants">Pants</MenuItem>
                         <MenuItem value="Shirts">Shirts</MenuItem>
-                        <MenuItem value="Shoes">Shoes</MenuItem>
+                        <MenuItem value="Shoes">Shose</MenuItem>
                         <MenuItem value="Skirts">Skirts</MenuItem>
-                        <MenuItem value="Dresses">Dresses</MenuItem>
+                        <MenuItem value="Dresses">Dresse</MenuItem>
                     </Select>
 
 
                     <Box display="flex" justifyContent="space-between" mt={2}>
-                        <Button onClick={resetFilters} color="secondary">Reset</Button>
-                        <Button variant="contained" color="primary" onClick={applyFilters}>Apply</Button>
+                        <Button onClick={resetFilters} sx={{ color: "#D81633" }}>Reset</Button>
+                        <Button variant="contained" onClick={applyFilters} sx={{ backgroundColor: "#00174F", '&:hover': { backgroundColor: "#00174F" } }} >
+                            Apply
+                        </Button>
                     </Box>
+
                 </Box>
             </Popover>
         </div>

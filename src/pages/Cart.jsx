@@ -12,8 +12,8 @@ const Cart = () => {
     const cart = useSelector((state) => state.cart.arr || []);  // קבלת המוצרים מהקופה
     const totalPrice = useSelector((state) => state.cart.sum);  // סך המחיר של כל המוצרים בקופה
     const currentUser = useSelector((st) => st.user.user);  // קבלת המשתמש הנוכחי
-    const dispatch = useDispatch();  // הפונקציות של ה-Redux
-    const navigate = useNavigate();  // ניווט לעמודים אחרים
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [isCChekUserOpen, setCChekUserOpen] = useState(false); // מצב לפתיחת ChekUser
 
@@ -40,12 +40,14 @@ const Cart = () => {
 
     return (
         <Container maxWidth={false} sx={{
-            display: 'flex',               // הפעלת Flexbox
-            flexDirection: 'column',       // סידור התוכן לעמודה
-            alignItems: 'center',          // ממורכז אופקית
-            justifyContent: 'center',      // ממורכז אנכית
-            height: '100vh',               // 100% מהגובה של החלון
-            marginTop: '75px',            // שולי עליון
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '100vh',  
+            marginTop: '100px',
+            overflowY: 'auto', 
+            padding: '16px',    
         }}>
             <Typography variant="h4" gutterBottom sx={{ color: '#00174F', textAlign: 'center', fontWeight: 'bold' }}>
                 Shopping Cart

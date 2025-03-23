@@ -5,11 +5,8 @@ import { AppBar, Toolbar, Button, Box, IconButton, Badge, Typography, Menu, Menu
 import logo from '../assets/logo.png';
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { useState } from 'react';
-import EditIcon from '@mui/icons-material/Edit';
-import { updateProfileImage } from '../features/userSlice';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import AddIcon from '@mui/icons-material/Add';
-import HomeIcon from '@mui/icons-material/Home'; // אייקון בית אחר
+import HomeIcon from '@mui/icons-material/Home'; 
 
 
 const NavBar = ({ setFilters }) => {
@@ -39,6 +36,7 @@ const NavBar = ({ setFilters }) => {
     return (
         <AppBar position="fixed" sx={{ backgroundColor: '#00174F', width: '100%', height: '110px' }}>
             <Toolbar sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: 80 }}>
+                {/* navbar -לוגו ב */}
                 <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', height: '70px', mb: 1 }}>
                     <img src={logo} alt="Logo" style={{ height: '100px', width: '450px' }} />
                 </Box>
@@ -52,21 +50,10 @@ const NavBar = ({ setFilters }) => {
                                 onClick={() => handleCategoryChange(category)}
                                 color="inherit"
                                 sx={{
-                                    backgroundColor: selectedFilter === category ? 'white' : '#00174F',
-                                    color: selectedFilter === category ? '#00174F' : 'white',
-                                    padding: '5px 12px',  // צמצום הרוחב והגובה
-                                    borderRadius: '20px', // הקטנה ושיפור עיצוב
-                                    fontWeight: 'bold',
-                                    fontSize: '0.75rem', // הקטנת גודל הגופן
-                                    '&:hover': {
-                                        backgroundColor: 'white',
-                                        color: '#00174F',
-                                        transform: 'scale(1.05)',
-                                        transition: 'transform 0.2s ease-in-out',
-                                    },
+                                    backgroundColor: selectedFilter === category ? 'white' : '#00174F', color: selectedFilter === category ? '#00174F' : 'white', padding: '5px 12px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.75rem',
+                                    '&:hover': { backgroundColor: 'white', color: '#00174F', transform: 'scale(1.05)', transition: 'transform 0.2s ease-in-out', },
                                     '&:active': { transform: 'scale(0.95)' }
-                                }}
-                            >
+                                }}>
                                 {category}
                             </Button>
 
@@ -75,7 +62,7 @@ const NavBar = ({ setFilters }) => {
 
                 {/* כפתור בית */}
                 {location.pathname != "/" &&
-                    <IconButton component={Link} to="/" sx={{ position: 'absolute', left:10, top: 57, p: 1 }}>
+                    <IconButton component={Link} to="/" sx={{ position: 'absolute', left: 10, top: 57, p: 1 }}>
                         <HomeIcon sx={{ fontSize: 30, color: 'white' }} />
                     </IconButton>}
 
@@ -86,16 +73,9 @@ const NavBar = ({ setFilters }) => {
                         onClick={handleCartClick}
                         disableRipple
                         sx={{
-                            color: 'white',
-                            backgroundColor: 'transparent',
-                            borderRadius: '4px',
-                            padding: 1,
-                            outline: 'none',
-                            '&:focus': { outline: 'none' },
-                            '&:active': { backgroundColor: 'transparent' },
-                            '&:hover': { backgroundColor: 'transparent' }
-                        }}
-                    >
+                            color: 'white', backgroundColor: 'transparent', borderRadius: '4px', padding: 1, outline: 'none',
+                            '&:focus': { outline: 'none' }, '&:active': { backgroundColor: 'transparent' }, '&:hover': { backgroundColor: 'transparent' }
+                        }}>
                         <Badge badgeContent={cartCount} sx={{ '& .MuiBadge-badge': { backgroundColor: 'white', color: '#D81633', fontSize: '0.9rem', fontWeight: 'bold' } }}>
                             <LocalMallIcon sx={{ fontSize: '2rem' }} />
                         </Badge>
@@ -106,23 +86,11 @@ const NavBar = ({ setFilters }) => {
                 {/* אייקון פרופיל בצד ימין */}
                 <Box sx={{ position: 'absolute', right: 60, top: 67 }}>
                     <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
-                        <Avatar
-                            sx={{
-                                bgcolor: 'white', // הרקע תמיד יהיה לבן
-                                color: '#00174F', // הצבע של האותיות או האייקון יהיה כחול
-                                width: 30, // גודל קטן יותר
-                                height: 30, // גודל קטן יותר
-                                '&:hover': {
-                                    bgcolor: 'white', // גם בהובר הרקע לבן
-                                }
-                            }}
-                        >
-                            {user?.profileImage ? (
-                                <img src={user.profileImage} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
-                            ) : user ? (
-                                "U" // אם אין תמונה, ה- U יהיה בצבע כחול
+                        <Avatar sx={{ bgcolor: 'white', color: '#00174F', width: 30, height: 30, '&:hover': { bgcolor: 'white', } }} >
+                            {user ? (
+                                "U"
                             ) : (
-                                <Avatar sx={{ bgcolor: 'white', width: 30, height: 30, color: '#00174F' }} /> // אווטר לבן עם אייקון כחול
+                                <Avatar sx={{ bgcolor: 'white', width: 30, height: 30, color: '#00174F' }} />
                             )}
                         </Avatar>
 
@@ -137,59 +105,30 @@ const NavBar = ({ setFilters }) => {
                             <>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2 }}>
                                     <Avatar sx={{ width: 70, height: 70 }}>
-                                        {user.profileImage ? (
-                                            <img src={user.profileImage} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
-                                        ) : (
-                                            user.name?.charAt(0).toUpperCase()
-                                        )}
                                     </Avatar>
                                     <Typography sx={{ mt: 1, fontWeight: 'bold', fontSize: '1rem' }}>Hello, {user.userName}!</Typography>
                                 </Box>
                                 <Divider sx={{ my: 1 }} />
                                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, p: 1 }}>
                                     {user?.role === "MANAGER" && (
-                                        <Button
-                                            onClick={() => navigate("/FormProduct")}
-                                            sx={{
-                                                color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none',
-                                                fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', // כפתורים צרים יותר
-                                                '&:hover': { backgroundColor: 'white' } // בלי שינוי בהובר
-                                            }}
-                                        >
+                                        <Button onClick={() => navigate("/FormProduct")}
+                                            sx={{ color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none', fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', '&:hover': { backgroundColor: 'white' } }}>
                                             Add product
                                         </Button>
                                     )}
                                     {user?.role === "MANAGER" && (
-                                        <Button
-                                            onClick={() => navigate("/AllOrders")}
-                                            sx={{
-                                                color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none',
-                                                fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', // כפתורים צרים יותר
-                                                '&:hover': { backgroundColor: 'white' } // בלי שינוי בהובר
-                                            }}
-                                        >
+                                        <Button onClick={() => navigate("/AllOrders")}
+                                            sx={{ color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none', fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', '&:hover': { backgroundColor: 'white' } }} >
                                             All orders
                                         </Button>
 
                                     )}
-                                    <Button
-                                        onClick={() => navigate("/OrderByUser")}
-                                        sx={{
-                                            color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none',
-                                            fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', // כפתורים צרים יותר
-                                            '&:hover': { backgroundColor: 'white' } // בלי שינוי בהובר
-                                        }}
-                                    >
+                                    <Button onClick={() => navigate("/OrderByUser")}
+                                        sx={{ color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none', fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', '&:hover': { backgroundColor: 'white' } }}>
                                         Your orders
                                     </Button>
-                                    <Button
-                                        onClick={() => dispatch(logOut())}
-                                        sx={{
-                                            color: '#D81633', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none',
-                                            fontSize: '0.9rem', p: '5px 10px', minWidth: '100%',
-                                            '&:hover': { backgroundColor: 'white' }
-                                        }}
-                                    >
+                                    <Button onClick={() => dispatch(logOut())}
+                                        sx={{ color: '#D81633', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none', fontSize: '0.9rem', p: '5px 10px', minWidth: '100%', '&:hover': { backgroundColor: 'white' } }}>
                                         LogOut <ExitToAppIcon fontSize="small" />
                                     </Button>
 
@@ -203,24 +142,15 @@ const NavBar = ({ setFilters }) => {
                                     color="inherit"
                                     component={Link}
                                     to="/login"
-                                    sx={{
-                                        color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none',
-                                        fontSize: '0.9rem', width: '100%', textAlign: 'center',
-                                        '&:hover': { backgroundColor: 'white' }
-                                    }}
-                                >
+                                    sx={{ color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none', fontSize: '0.9rem', width: '100%', textAlign: 'center', '&:hover': { color: '#00174F', } }}>
                                     Login
                                 </Button>
+
                                 <Button
                                     color="inherit"
                                     component={Link}
                                     to="/signUp"
-                                    sx={{
-                                        color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none',
-                                        fontSize: '0.9rem', width: '100%', textAlign: 'center', mt: 1,
-                                        '&:hover': { backgroundColor: 'white' }
-                                    }}
-                                >
+                                    sx={{ color: '#00174F', backgroundColor: 'white', borderRadius: '20px', textTransform: 'none', fontSize: '0.9rem', width: '100%', textAlign: 'center', mt: 1, '&:hover': { color: '#00174F', } }}>
                                     Sign Up
                                 </Button>
                             </Box>

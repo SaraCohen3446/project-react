@@ -32,6 +32,7 @@ const OrderSlice = createSlice({
       state.sum = state.arr.reduce((total, item) => total + (item.price * item.qty), 0);
       saveCartToLocalStorage(state);
     },
+    
     /**
      * איפוס בלוקל סטורג'
      *
